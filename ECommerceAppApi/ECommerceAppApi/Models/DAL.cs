@@ -191,5 +191,133 @@ namespace ECommerceAppApi.Models
 
             return response;
         }
+
+        public Response ViewOrders(Users users, SqlConnection connection)
+        {
+            Response response = new Response();
+            List<Orders> orderList = new List<Orders>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewOrders", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+            da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
+            da.SelectCommand.Parameters.AddWithValue("@Type", users.Type);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if(dt.Rows.Count > 0)
+            {
+                for(int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Orders order = new Orders();
+                    order.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
+                    order.OrderNo = Convert.ToString(dt.Rows[0]["OrderNo"]);
+                    order.OrderTotal = Convert.ToDecimal(dt.Rows[0]["OrderTotal"]);
+                    order.OrderStatus = Convert.ToString(dt.Rows[0]["OrderStatus"]);
+                    orderList.Add(order);
+                }
+
+                if(orderList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Orders fetched";
+                    response.ListOrders = orderList;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.Message = "Orders could not be fetched";
+                    response.ListOrders = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.Message = "Orders could not be fetched";
+                response.ListOrders = null;
+            }
+
+            return response;
+        }
+
+        public Response AddUpdateProducts(Products products, SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("sp_addUpdateProducts", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Name", products.Name);
+            cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
+            cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
+            cmd.Parameters.AddWithValue("@Discount", products.Discount);
+            cmd.Parameters.AddWithValue("@Quantity", products.Quantity);
+            cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
+            cmd.Parameters.AddWithValue("@Status", products.Status);
+            cmd.Parameters.AddWithValue("@Type", products.Type);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Product added successfully";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.Message = "Product could not be added";
+            }
+
+            return response;
+        }
+
+        public Response ViewUsers(SqlConnection connection)
+        {
+            Response response = new Response();
+            List<Users> usersList = new List<Users>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewUsers", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Users user = new Users();
+                    user.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
+                    user.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
+                    user.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                    user.Password = Convert.ToString(dt.Rows[0]["Password"]);
+                    user.Email = Convert.ToString(dt.Rows[0]["Email"]);
+                    user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
+                    user.Type = Convert.ToString(dt.Rows[0]["Type"]);
+                    user.Status = Convert.ToInt32(dt.Rows[0]["Status"]);
+                    user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
+                    usersList.Add(user);
+                }
+
+                if (usersList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Users fetched";
+                    response.ListUsers = usersList;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.Message = "Users could not be fetched";
+                    response.ListUsers = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.Message = "Users could not be fetched";
+                response.ListUsers = null;
+            }
+
+            return response;
+        }
     }
 }

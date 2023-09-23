@@ -7,53 +7,39 @@ namespace ECommerceAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class AdminController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public ProductsController(IConfiguration configuration)
+        public AdminController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [HttpPost]
-        [Route("addToCart")]
-        public Response AddToCart(Cart cart)
+        [Route("addUpdateProducts")]
+        public Response AddUpdateProducts(Products products)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.AddToCart(cart, connection);
+            Response response = dal.AddUpdateProducts(products, connection);
 
             return response;
         }
 
-        [HttpPost]
-        [Route("placeOrder")]
-        public Response PlaceOrder(Users users)
+        [HttpGet]
+        [Route("viewUsers")]
+        public Response ViewUsers()
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.PlaceOrder(users, connection);
-
-            return response;
-        }
-
-        [HttpPost]
-        [Route("viewOrders")]
-        public Response ViewOrders(Users users)
-        {
-            DAL dal = new DAL();
-
-            SqlConnection connection =
-                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
-
-            Response response = dal.ViewOrders(users, connection);
+            Response response = dal.ViewUsers(connection);
 
             return response;
         }
