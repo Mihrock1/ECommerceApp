@@ -1,5 +1,4 @@
 ﻿using ECommerceAppApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
@@ -17,15 +16,29 @@ namespace ECommerceAppApi.Controllers
         }
 
         [HttpPost]
-        [Route("addUpdateProducts")]
-        public Response AddUpdateProducts(Products products)
+        [Route("addProducts")]
+        public Response AddProducts(Products products)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.AddUpdateProducts(products, connection);
+            Response response = dal.AddProducts(products, connection);
+
+            return response;
+        }
+
+        [HttpPost]
+        [Route("updateProducts")]
+        public Response UpdateProducts(Products products)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.UpdateProducts(products, connection);
 
             return response;
         }

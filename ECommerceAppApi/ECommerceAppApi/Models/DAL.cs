@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace ECommerceAppApi.Models
@@ -238,10 +237,10 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response AddUpdateProducts(Products products, SqlConnection connection)
+        public Response AddProducts(Products products, SqlConnection connection)
         {
             Response response = new Response();
-            SqlCommand cmd = new SqlCommand("sp_addUpdateProducts", connection);
+            SqlCommand cmd = new SqlCommand("sp_addProducts", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@Name", products.Name);
@@ -251,7 +250,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@Quantity", products.Quantity);
             cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
             cmd.Parameters.AddWithValue("@Status", products.Status);
-            cmd.Parameters.AddWithValue("@Type", products.Type);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -266,6 +264,38 @@ namespace ECommerceAppApi.Models
             {
                 response.StatusCode = 100;
                 response.Message = "Product could not be added";
+            }
+
+            return response;
+        }
+
+        public Response UpdateProducts(Products products, SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("sp_updateProducts", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Name", products.Name);
+            cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
+            cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
+            cmd.Parameters.AddWithValue("@Discount", products.Discount);
+            cmd.Parameters.AddWithValue("@Quantity", products.Quantity);
+            cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
+            cmd.Parameters.AddWithValue("@Status", products.Status);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Product updated successfully";
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.Message = "Product could not be updated";
             }
 
             return response;
