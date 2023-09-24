@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.VisualBasic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace ECommerceAppApi.Models
@@ -16,7 +17,7 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@Email", users.Email);
             cmd.Parameters.AddWithValue("@Fund", 0);
             cmd.Parameters.AddWithValue("@Type", "User");
-            cmd.Parameters.AddWithValue("@Status", "Pending");
+            cmd.Parameters.AddWithValue("@Status", 0);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -30,7 +31,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "User registration failed";
             }
 
@@ -64,7 +65,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 401;
                 response.Message = "User is invalid";
                 response.User = null;
             }
@@ -99,7 +100,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 404;
                 response.Message = "User does not exist";
                 response.User = null;
             }
@@ -110,6 +111,9 @@ namespace ECommerceAppApi.Models
         public Response UpdateUser(Users users, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand("sp_update", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Id", users.Id);
             cmd.Parameters.AddWithValue("@FirstName", users.FirstName);
             cmd.Parameters.AddWithValue("@LastName", users.LastName);
             cmd.Parameters.AddWithValue("@Email", users.Email);
@@ -127,7 +131,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "User could not be updated";
             }
 
@@ -141,8 +145,6 @@ namespace ECommerceAppApi.Models
 
             cmd.Parameters.AddWithValue("@UserId", cart.UserId);
             cmd.Parameters.AddWithValue("@ProductId", cart.ProductId);
-            cmd.Parameters.AddWithValue("@UnitPrice", cart.UnitPrice);
-            cmd.Parameters.AddWithValue("@Discount", cart.Discount);
             cmd.Parameters.AddWithValue("@Quantity", cart.Quantity);
             cmd.Parameters.AddWithValue("@TotalPrice", cart.TotalPrice);
 
@@ -158,7 +160,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "Item could not be added to cart";
             }
 
@@ -171,6 +173,7 @@ namespace ECommerceAppApi.Models
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@UserId", users.Id);
+            cmd.Parameters.AddWithValue("@OrderNo", Guid.NewGuid());
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -184,7 +187,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "Order could not be placed";
             }
 
@@ -197,6 +200,7 @@ namespace ECommerceAppApi.Models
             List<Orders> orderList = new List<Orders>();
             SqlDataAdapter da = new SqlDataAdapter("sp_viewOrders", connection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
             da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
             da.SelectCommand.Parameters.AddWithValue("@Type", users.Type);
 
@@ -207,8 +211,7 @@ namespace ECommerceAppApi.Models
                 for(int i = 0; i < dt.Rows.Count; i++)
                 {
                     Orders order = new Orders();
-                    order.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
-                    order.OrderNo = Convert.ToString(dt.Rows[0]["OrderNo"]);
+                    order.OrderNo = Guid.Parse(Convert.ToString(dt.Rows[0]["OrderNo"]));
                     order.OrderTotal = Convert.ToDecimal(dt.Rows[0]["OrderTotal"]);
                     order.OrderStatus = Convert.ToString(dt.Rows[0]["OrderStatus"]);
                     orderList.Add(order);
@@ -247,7 +250,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
             cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
             cmd.Parameters.AddWithValue("@Discount", products.Discount);
-            cmd.Parameters.AddWithValue("@Quantity", products.Quantity);
             cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
             cmd.Parameters.AddWithValue("@Status", products.Status);
 
@@ -279,7 +281,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
             cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
             cmd.Parameters.AddWithValue("@Discount", products.Discount);
-            cmd.Parameters.AddWithValue("@Quantity", products.Quantity);
             cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
             cmd.Parameters.AddWithValue("@Status", products.Status);
 
