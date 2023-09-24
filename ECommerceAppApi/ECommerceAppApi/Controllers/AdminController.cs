@@ -43,16 +43,16 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("viewUsers")]
-        public Response ViewUsers()
+        public Response ViewUsers(Users users)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.ViewUsers(connection);
+            Response response = dal.ViewUsers(users, connection);
 
             return response;
         }

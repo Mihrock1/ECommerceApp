@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace ECommerceAppApi.Models
@@ -146,7 +145,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@UserId", cart.UserId);
             cmd.Parameters.AddWithValue("@ProductId", cart.ProductId);
             cmd.Parameters.AddWithValue("@Quantity", cart.Quantity);
-            cmd.Parameters.AddWithValue("@TotalPrice", cart.TotalPrice);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -202,7 +200,6 @@ namespace ECommerceAppApi.Models
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
 
             da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
-            da.SelectCommand.Parameters.AddWithValue("@Type", users.Type);
 
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -213,7 +210,6 @@ namespace ECommerceAppApi.Models
                     Orders order = new Orders();
                     order.OrderNo = Guid.Parse(Convert.ToString(dt.Rows[0]["OrderNo"]));
                     order.OrderTotal = Convert.ToDecimal(dt.Rows[0]["OrderTotal"]);
-                    order.OrderStatus = Convert.ToString(dt.Rows[0]["OrderStatus"]);
                     orderList.Add(order);
                 }
 
@@ -225,14 +221,14 @@ namespace ECommerceAppApi.Models
                 }
                 else
                 {
-                    response.StatusCode = 100;
+                    response.StatusCode = 401;
                     response.Message = "Orders could not be fetched";
                     response.ListOrders = null;
                 }
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 401;
                 response.Message = "Orders could not be fetched";
                 response.ListOrders = null;
             }
@@ -251,7 +247,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
             cmd.Parameters.AddWithValue("@Discount", products.Discount);
             cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
-            cmd.Parameters.AddWithValue("@Status", products.Status);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -264,7 +259,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "Product could not be added";
             }
 
@@ -277,12 +272,12 @@ namespace ECommerceAppApi.Models
             SqlCommand cmd = new SqlCommand("sp_updateProducts", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            cmd.Parameters.AddWithValue("@Id", products.Id);
             cmd.Parameters.AddWithValue("@Name", products.Name);
             cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
             cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
             cmd.Parameters.AddWithValue("@Discount", products.Discount);
             cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
-            cmd.Parameters.AddWithValue("@Status", products.Status);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -295,19 +290,21 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 400;
                 response.Message = "Product could not be updated";
             }
 
             return response;
         }
 
-        public Response ViewUsers(SqlConnection connection)
+        public Response ViewUsers(Users users, SqlConnection connection)
         {
             Response response = new Response();
             List<Users> usersList = new List<Users>();
             SqlDataAdapter da = new SqlDataAdapter("sp_viewUsers", connection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
 
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -316,15 +313,14 @@ namespace ECommerceAppApi.Models
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     Users user = new Users();
-                    user.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
-                    user.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
-                    user.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
-                    user.Password = Convert.ToString(dt.Rows[0]["Password"]);
-                    user.Email = Convert.ToString(dt.Rows[0]["Email"]);
-                    user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
-                    user.Type = Convert.ToString(dt.Rows[0]["Type"]);
-                    user.Status = Convert.ToInt32(dt.Rows[0]["Status"]);
-                    user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
+                    user.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    user.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                    user.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                    user.Password = Convert.ToString(dt.Rows[i]["Password"]);
+                    user.Email = Convert.ToString(dt.Rows[i]["Email"]);
+                    user.Fund = Convert.ToDecimal(dt.Rows[i]["Fund"]);
+                    user.Type = Convert.ToString(dt.Rows[i]["Type"]);
+                    user.CreatedOn = Convert.ToDateTime(dt.Rows[i]["CreatedOn"]);
                     usersList.Add(user);
                 }
 
@@ -336,14 +332,14 @@ namespace ECommerceAppApi.Models
                 }
                 else
                 {
-                    response.StatusCode = 100;
+                    response.StatusCode = 401;
                     response.Message = "Users could not be fetched";
                     response.ListUsers = null;
                 }
             }
             else
             {
-                response.StatusCode = 100;
+                response.StatusCode = 401;
                 response.Message = "Users could not be fetched";
                 response.ListUsers = null;
             }

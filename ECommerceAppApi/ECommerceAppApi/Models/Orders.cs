@@ -6,6 +6,5 @@
         public int MyInt { get; set; }
         public int UserId { get; set; }
         public decimal OrderTotal { get; set; }
-        public string? OrderStatus { get; set; }
     }
 }
