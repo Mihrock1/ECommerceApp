@@ -11,9 +11,8 @@ import AdminDashboard from './admin/AdminDashboard';
 import AdminOrders from './admin/AdminOrders';
 import CustomerList from './admin/CustomerList';
 import Product from './admin/Product';
-
-
-export default function RouterPage() {
+ 
+function RouterPage() {
     return (
         <Router>
             <Routes>
@@ -33,3 +32,5 @@ export default function RouterPage() {
         </Router>        
     );
 }
+
+export default RouterPage;
