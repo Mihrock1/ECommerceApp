@@ -36,3 +36,9 @@ C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommer
 C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\obj\Debug\net6.0\ECommerceAppApi.pdb
 C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\obj\Debug\net6.0\ECommerceAppApi.genruntimeconfig.cache
 C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\obj\Debug\net6.0\ref\ECommerceAppApi.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\System.Web.Cors.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\System.Net.Http.Formatting.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\System.Web.Http.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\System.Web.Http.Cors.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\mihir\OneDrive\Documents\Workspace\ECommerceApp\ECommerceAppApi\ECommerceAppApi\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
