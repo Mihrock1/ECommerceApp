@@ -57,5 +57,19 @@ namespace ECommerceAppApi.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        [Route("viewProducts")]
+        public Response ViewProducts(Users users)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.ViewProducts(users, connection);
+
+            return response;
+        }
     }
 }

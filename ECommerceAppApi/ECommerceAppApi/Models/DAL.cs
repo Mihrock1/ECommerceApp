@@ -208,8 +208,8 @@ namespace ECommerceAppApi.Models
                 for(int i = 0; i < dt.Rows.Count; i++)
                 {
                     Orders order = new Orders();
-                    order.OrderNo = Guid.Parse(Convert.ToString(dt.Rows[0]["OrderNo"]));
-                    order.OrderTotal = Convert.ToDecimal(dt.Rows[0]["OrderTotal"]);
+                    order.OrderNo = Guid.Parse(Convert.ToString(dt.Rows[i]["OrderNo"]));
+                    order.OrderTotal = Convert.ToDecimal(dt.Rows[i]["OrderTotal"]);
                     orderList.Add(order);
                 }
 
@@ -342,6 +342,54 @@ namespace ECommerceAppApi.Models
                 response.StatusCode = 401;
                 response.Message = "Users could not be fetched";
                 response.ListUsers = null;
+            }
+
+            return response;
+        }
+
+        public Response ViewProducts(Users users, SqlConnection connection)
+        {
+            Response response = new Response();
+            List<Products> productList = new List<Products>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewProducts", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.AddWithValue("@UserId", users.Id);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Products product = new Products();
+                    product.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    product.Name = Convert.ToString(dt.Rows[i]["Name"]);
+                    product.Manufacturer = Convert.ToString(dt.Rows[i]["Manufacturer"]);
+                    product.UnitPrice = Convert.ToDecimal(dt.Rows[i]["UnitPrice"]);
+                    product.Discount = Convert.ToInt32(dt.Rows[i]["Discount"]);
+                    product.ImageUrl = Convert.ToString(dt.Rows[i]["ImageUrl"]);
+                    productList.Add(product);
+                }
+
+                if (productList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Products fetched";
+                    response.ListProducts = productList;
+                }
+                else
+                {
+                    response.StatusCode = 401;
+                    response.Message = "Products could not be fetched";
+                    response.ListProducts = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.Message = "Products could not be fetched";
+                response.ListProducts = null;
             }
 
             return response;

@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { baseUrl } from "./Constants";
 
 function Login() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [isRedirect, setIsRedirect] = React.useState(false);
-  const [user, setUser] = React.useState({"id": "", "firstName": "", "lastName": "", 
-  "email": "", "type": "", "fund": "", "createdOn": ""});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRedirect, setIsRedirect] = useState(false);
+  const [user, setUser] = useState([]);
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const loginInfo = { email, password };
+    const loginInfo = {"email": email, "password": password};
 
     fetch(baseUrl + "/Users/login", {
       method: "POST",
@@ -27,8 +26,7 @@ function Login() {
       .then((data) => {
         console.log(data);
         if (data.statusCode === 200) {
-          setUser({"id": data.user.id, "firstName": data.user.firstName, "lastName": data.user.lastName, 
-          "email": data.user.email, "type": data.user.type, "fund": data.user.fund, "createdOn": data.user.createdOn});
+          setUser(data.user);
           setIsRedirect(true);
         }
       })
@@ -40,9 +38,9 @@ function Login() {
   useEffect(() => {
     if (isRedirect) {
       if (user.type === "User") {
-        navigate("/dashboard", {state: {user}, replace: false});
+        navigate("/dashboard", {state: user, replace: false});
       } else if (user.type === "Admin") {
-        navigate("/admindashboard", {state: {user}, replace: false});
+        navigate("/admindashboard", {state: user, replace: false});
       }
     }
   }, [isRedirect, navigate, user]);
