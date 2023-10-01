@@ -154,12 +154,58 @@ namespace ECommerceAppApi.Models
             if (i > 0)
             {
                 response.StatusCode = 200;
-                response.Message = "Item added to cart successfully";
+                response.Message = "Items added to cart successfully";
             }
             else
             {
                 response.StatusCode = 400;
-                response.Message = "Item could not be added to cart";
+                response.Message = "Items could not be added to cart";
+            }
+
+            return response;
+        }
+
+        public Response ViewCartItems(Users users, SqlConnection connection)
+        {
+            Response response = new Response();
+            List<Cart> cartItemsList = new List<Cart>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewCartItems", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.AddWithValue("@UserId", users.Id);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Cart cartItems = new Cart();
+                    cartItems.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    cartItems.ProductId = Convert.ToInt32(dt.Rows[i]["ProductId"]);
+                    cartItems.Quantity = Convert.ToInt32(dt.Rows[i]["Quantity"]);
+                    cartItems.TotalPrice = Convert.ToDecimal(dt.Rows[i]["TotalPrice"]);
+                    cartItemsList.Add(cartItems);
+                }
+
+                if (cartItemsList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Cart Items fetched";
+                    response.ListCartItems = cartItemsList;
+                }
+                else
+                {
+                    response.StatusCode = 401;
+                    response.Message = "Cart Items could not be fetched";
+                    response.ListCartItems = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.Message = "Cart Items could not be fetched";
+                response.ListCartItems = null;
             }
 
             return response;

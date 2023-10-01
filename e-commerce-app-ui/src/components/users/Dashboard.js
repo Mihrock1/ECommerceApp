@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MDBBtn, MDBContainer } from "mdb-react-ui-kit";
 import { baseUrl } from "../Constants";
 import Product from "./Product";
@@ -9,33 +9,41 @@ export default function Dashboard() {
   const location = useLocation();
 
   const [products, setProducts] = useState([]);
+  const [isRedirect, setIsRedirect] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
+  const navigate = useNavigate();
 
   const handleGoToCart = (e) => {
     e.preventDefault();
-    // const productInfo = {
-    //   userId: props.userId,
-    //   productId: props.product.id,
-    //   quantity: quantity,
-    // };
-    // console.log(productInfo);
 
-    fetch(baseUrl + "/Products/addToCart", {
+    const userId = { id: location.state.id };
+
+    fetch(baseUrl + "/Products/viewCartItems", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(productInfo),
+      body: JSON.stringify(userId),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         if (data.statusCode === 200) {
+          setCartItems(data.listCartItems);
+          setIsRedirect(true);
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    if (isRedirect) {
+      navigate("/cart", { state: { cartItems, products }, replace: false });
+    }
+  }, [isRedirect, navigate, cartItems, products]);
 
   useEffect(() => {
     const userId = { id: location.state.id };
