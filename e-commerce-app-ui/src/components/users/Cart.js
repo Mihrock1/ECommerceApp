@@ -11,14 +11,17 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { baseUrl } from "../Constants";
 
 export default function Cart() {
   const location = useLocation();
-  const navigate = useNavigate();
-
   console.log(location.state);
+
+  const [newCartItem, setNewCartItem] = useState(null);
+
+  const navigate = useNavigate();
 
   const noOfItems = () => {
     let noOfItems = 0;
@@ -43,6 +46,39 @@ export default function Cart() {
     );
     return product;
   };
+
+  const updateCartItem = (quantity, cartItem) => {
+    if (cartItem.quantity !== quantity) {
+      setNewCartItem({
+        userId: cartItem.userId,
+        productId: cartItem.productId,
+        quantity: quantity,
+      });
+
+      console.log(newCartItem);
+    }
+  };
+
+  useEffect(() => {
+    if (newCartItem !== null) {
+      fetch(baseUrl + "/Products/updateCartItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCartItem),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.statusCode === 200) {
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [newCartItem]);
 
   return (
     <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>
@@ -71,61 +107,62 @@ export default function Cart() {
 
                       <hr className="my-4" />
 
-                      <MDBRow className="mb-4 d-flex justify-content-between align-items-center">
-                        {location.state.cartItems.map((cartItem) => (
-                          <>
-                            <MDBCol md="2" lg="2" xl="2">
-                              <MDBCardImage
-                                src={fetchProduct(cartItem.productId).imageUrl}
-                                fluid
-                                className="img rounded-3 mx-auto d-block"
-                              />
-                            </MDBCol>
-                            <MDBCol md="3" lg="3" xl="3">
-                              <MDBTypography tag="h6" className="text-muted">
-                                {fetchProduct(cartItem.productId).manufaacturer}
-                              </MDBTypography>
-                              <MDBTypography
-                                tag="h6"
-                                className="text-black mb-0"
-                              >
-                                {fetchProduct(cartItem.productId).name}
-                              </MDBTypography>
-                            </MDBCol>
-                            <MDBCol
-                              md="3"
-                              lg="3"
-                              xl="3"
-                              className="d-flex align-items-center"
-                            >
-                              <MDBBtn color="link" className="px-2">
-                                <MDBIcon fas icon="minus" />
-                              </MDBBtn>
+                      {location.state.cartItems.map((cartItem) => (
+                        <MDBRow
+                          className="mb-4 d-flex justify-content-between align-items-center"
+                          key={cartItem.id}
+                        >
+                          <MDBCol md="2" lg="2" xl="2">
+                            <MDBCardImage
+                              src={fetchProduct(cartItem.productId).imageUrl}
+                              fluid
+                              className="img rounded-3 mx-auto d-block"
+                            />
+                          </MDBCol>
+                          <MDBCol md="3" lg="3" xl="3">
+                            <MDBTypography tag="h6" className="text-muted">
+                              {fetchProduct(cartItem.productId).manufacturer}
+                            </MDBTypography>
+                            <MDBTypography tag="h6" className="text-black mb-0">
+                              {fetchProduct(cartItem.productId).name}
+                            </MDBTypography>
+                          </MDBCol>
+                          <MDBCol
+                            md="3"
+                            lg="3"
+                            xl="3"
+                            className="d-flex align-items-center"
+                          >
+                            <MDBBtn color="link" className="px-2">
+                              <MDBIcon fas icon="minus" />
+                            </MDBBtn>
 
-                              <MDBInput
-                                type="number"
-                                min="0"
-                                defaultValue={1}
-                                size="sm"
-                              />
+                            <MDBInput
+                              type="number"
+                              min="0"
+                              defaultValue={cartItem.quantity}
+                              size="sm"
+                              onChange={(e) =>
+                                updateCartItem(e.target.value, cartItem)
+                              }
+                            />
 
-                              <MDBBtn color="link" className="px-2">
-                                <MDBIcon fas icon="plus" />
-                              </MDBBtn>
-                            </MDBCol>
-                            <MDBCol md="3" lg="2" xl="2" className="text-end">
-                              <MDBTypography tag="h6" className="mb-0">
-                                {cartItem.totalPrice}
-                              </MDBTypography>
-                            </MDBCol>
-                            <MDBCol md="1" lg="1" xl="1" className="text-end">
-                              <a href="#!" className="text-muted">
-                                <MDBIcon fas icon="times" />
-                              </a>
-                            </MDBCol>
-                          </>
-                        ))}
-                      </MDBRow>
+                            <MDBBtn color="link" className="px-2">
+                              <MDBIcon fas icon="plus" />
+                            </MDBBtn>
+                          </MDBCol>
+                          <MDBCol md="3" lg="2" xl="2" className="text-end">
+                            <MDBTypography tag="h6" className="mb-0">
+                              {cartItem.totalPrice}
+                            </MDBTypography>
+                          </MDBCol>
+                          <MDBCol md="1" lg="1" xl="1" className="text-end">
+                            <a href="#!" className="text-muted">
+                              <MDBIcon fas icon="times" />
+                            </a>
+                          </MDBCol>
+                        </MDBRow>
+                      ))}
 
                       <hr className="my-4" />
 

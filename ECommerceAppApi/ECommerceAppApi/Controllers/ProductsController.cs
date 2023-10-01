@@ -31,6 +31,20 @@ namespace ECommerceAppApi.Controllers
         }
 
         [HttpPost]
+        [Route("updateCartItem")]
+        public Response UpdateCartItem(Cart cart)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.UpdateCartItem(cart, connection);
+
+            return response;
+        }
+
+        [HttpPost]
         [Route("viewCartItems")]
         public Response ViewCartItems(Users users)
         {

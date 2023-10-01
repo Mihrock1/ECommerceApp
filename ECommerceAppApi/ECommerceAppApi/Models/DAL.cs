@@ -165,6 +165,34 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response UpdateCartItem(Cart cart, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_updateCartItem", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@UserId", cart.UserId);
+            cmd.Parameters.AddWithValue("@ProductId", cart.ProductId);
+            cmd.Parameters.AddWithValue("@Quantity", cart.Quantity);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Items in the cart updated successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Items in the cart could not be updated";
+            }
+
+            return response;
+        }
+
         public Response ViewCartItems(Users users, SqlConnection connection)
         {
             Response response = new Response();
