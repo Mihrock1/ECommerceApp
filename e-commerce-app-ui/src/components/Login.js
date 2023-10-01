@@ -13,7 +13,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const loginInfo = {"email": email, "password": password};
+    const loginInfo = { email: email, password: password };
 
     fetch(baseUrl + "/Users/login", {
       method: "POST",
@@ -38,15 +38,16 @@ function Login() {
   useEffect(() => {
     if (isRedirect) {
       if (user.type === "User") {
-        navigate("/dashboard", {state: user, replace: false});
+        navigate("/dashboard", { state: user, replace: false });
       } else if (user.type === "Admin") {
-        navigate("/admindashboard", {state: user, replace: false});
+        navigate("/admindashboard", { state: user, replace: false });
       }
     }
   }, [isRedirect, navigate, user]);
 
   return (
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+      <h1 className="mb-4">Login</h1>
       <MDBInput
         wrapperClass="mb-4"
         label="Email address"
@@ -72,7 +73,7 @@ function Login() {
 
       <div className="text-center">
         <p>
-          Not a member? <Link to="/registration">Register</Link>
+          Not a member? <Link to="/registration">Sign Up</Link>
         </p>
       </div>
     </MDBContainer>
