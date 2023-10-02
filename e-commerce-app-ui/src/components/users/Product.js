@@ -13,29 +13,29 @@ function Product(props) {
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    const productInfo = {
-      userId: props.userId,
-      productId: props.product.id,
-      quantity: quantity,
-    };
-    console.log(JSON.stringify(productInfo));
+    if (quantity !== 0) {
+      const productInfo = {
+        userId: props.userId,
+        productId: props.product.id,
+        quantity: quantity,
+      };
+      console.log(JSON.stringify(productInfo));
 
-    fetch(baseUrl + "/Products/addToCart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productInfo),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.statusCode === 200) {
-        }
+      fetch(baseUrl + "/Products/addToCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productInfo),
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (

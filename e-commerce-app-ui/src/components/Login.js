@@ -28,6 +28,8 @@ function Login() {
         if (data.statusCode === 200) {
           setUser(data.user);
           setIsRedirect(true);
+        } else {
+          alert(data.message);
         }
       })
       .catch((err) => {

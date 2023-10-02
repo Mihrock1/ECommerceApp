@@ -57,6 +57,7 @@ namespace ECommerceAppApi.Models
                 user.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
                 user.Email = Convert.ToString(dt.Rows[0]["Email"]);
                 user.Type = Convert.ToString(dt.Rows[0]["Type"]);
+                user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
 
                 response.StatusCode = 200;
                 response.Message = "User is valid";

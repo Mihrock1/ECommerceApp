@@ -17,12 +17,47 @@ import { baseUrl } from "../Constants";
 
 export default function Cart() {
   const location = useLocation();
-  console.log(location.state);
 
+  const [user] = useState(location.state.user);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
+  const [isRedirect, setIsRedirect] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isRedirect) {
+      navigate("/myorders", { state: { user }, replace: false });
+    }
+  }, [isRedirect, navigate, user]);
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    if (user.fund - totalCost() >= 0) {
+      fetch(baseUrl + "/Products/placeOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: user.id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.statusCode === 200) {
+            alert(data.message);
+            setIsRedirect(true);
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      alert("Insufficient Funds");
+    }
+  };
 
   function handleCartItemUpdateMinusButton(cartItem) {
     if (cartItem.quantity !== 1) {
@@ -107,7 +142,7 @@ export default function Cart() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: location.state.userId }),
+        body: JSON.stringify({ id: user.id }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -125,7 +160,7 @@ export default function Cart() {
     return () => {
       setFetchCartItems(false);
     };
-  }, [location.state.userId, fetchCartItems]);
+  }, [user, fetchCartItems]);
 
   const noOfItems = () => {
     let noOfItems = 0;
@@ -273,6 +308,15 @@ export default function Cart() {
                         tag="h3"
                         className="fw-bold mb-5 mt-2 pt-1"
                       >
+                        Available Funds: {user.fund}
+                      </MDBTypography>
+
+                      <hr className="my-4" />
+
+                      <MDBTypography
+                        tag="h3"
+                        className="fw-bold mb-5 mt-2 pt-1"
+                      >
                         Summary
                       </MDBTypography>
 
@@ -291,7 +335,12 @@ export default function Cart() {
                         <MDBTypography tag="h5">${totalCost()}</MDBTypography>
                       </div>
 
-                      <MDBBtn color="dark" block size="lg">
+                      <MDBBtn
+                        color="dark"
+                        block
+                        size="lg"
+                        onClick={handlePlaceOrder}
+                      >
                         Place Order
                       </MDBBtn>
                     </div>
