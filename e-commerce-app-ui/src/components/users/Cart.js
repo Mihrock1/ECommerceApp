@@ -11,7 +11,7 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../Constants";
 
@@ -19,23 +19,99 @@ export default function Cart() {
   const location = useLocation();
   console.log(location.state);
 
-  const [newCartItem, setNewCartItem] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [fetchCartItems, setFetchCartItems] = useState(true);
 
   const navigate = useNavigate();
 
+  function handleCartItemUpdateMinusButton(cartItem) {
+    const newCartItem = {
+      userId: cartItem.userId,
+      productId: cartItem.productId,
+      quantity: cartItem.quantity - 1,
+    };
+
+    fetchCartItemsFunction(newCartItem);
+  }
+
+  function handleCartItemUpdate(e, cartItem) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (cartItem.quantity !== parseInt(e.target.value)) {
+      const newCartItem = {
+        userId: cartItem.userId,
+        productId: cartItem.productId,
+        quantity: parseInt(e.target.value),
+      };
+
+      fetchCartItemsFunction(newCartItem);
+    }
+  }
+
+  function handleCartItemUpdatePlusButton(cartItem) {
+    const newCartItem = {
+      userId: cartItem.userId,
+      productId: cartItem.productId,
+      quantity: cartItem.quantity + 1,
+    };
+
+    fetchCartItemsFunction(newCartItem);
+  }
+
+  function fetchCartItemsFunction(newCartItem) {
+    fetch(baseUrl + "/Products/updateCartItem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCartItem),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.statusCode === 200) {
+          setFetchCartItems(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    if (fetchCartItems) {
+      fetch(baseUrl + "/Products/viewCartItems", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: location.state.userId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.statusCode === 200) {
+            setCartItems(data.listCartItems);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    return () => {
+      setFetchCartItems(false);
+    };
+  }, [location.state.userId, fetchCartItems]);
+
   const noOfItems = () => {
     let noOfItems = 0;
-    location.state.cartItems.map(
-      (cartItem) => (noOfItems += cartItem.quantity)
-    );
+    cartItems.map((cartItem) => (noOfItems += cartItem.quantity));
     return noOfItems;
   };
 
   const totalCost = () => {
     let totalCost = 0;
-    location.state.cartItems.map(
-      (cartItem) => (totalCost += cartItem.totalPrice)
-    );
+    cartItems.map((cartItem) => (totalCost += cartItem.totalPrice));
     return totalCost;
   };
 
@@ -47,38 +123,7 @@ export default function Cart() {
     return product;
   };
 
-  const updateCartItem = (quantity, cartItem) => {
-    if (cartItem.quantity !== quantity) {
-      setNewCartItem({
-        userId: cartItem.userId,
-        productId: cartItem.productId,
-        quantity: quantity,
-      });
-
-      console.log(newCartItem);
-    }
-  };
-
-  useEffect(() => {
-    if (newCartItem !== null) {
-      fetch(baseUrl + "/Products/updateCartItem", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCartItem),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          if (data.statusCode === 200) {
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [newCartItem]);
+  useEffect(() => {}, [cartItems]);
 
   return (
     <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>
@@ -107,7 +152,7 @@ export default function Cart() {
 
                       <hr className="my-4" />
 
-                      {location.state.cartItems.map((cartItem) => (
+                      {cartItems.map((cartItem) => (
                         <MDBRow
                           className="mb-4 d-flex justify-content-between align-items-center"
                           key={cartItem.id}
@@ -134,21 +179,32 @@ export default function Cart() {
                             className="d-flex align-items-center"
                           >
                             <MDBBtn color="link" className="px-2">
-                              <MDBIcon fas icon="minus" />
+                              <MDBIcon
+                                fas
+                                icon="minus"
+                                onClick={(e) =>
+                                  handleCartItemUpdateMinusButton(cartItem)
+                                }
+                              />
                             </MDBBtn>
 
                             <MDBInput
                               type="number"
-                              min="0"
-                              defaultValue={cartItem.quantity}
-                              size="sm"
+                              min="1"
+                              value={cartItem.quantity}
                               onChange={(e) =>
-                                updateCartItem(e.target.value, cartItem)
+                                handleCartItemUpdate(e, cartItem)
                               }
                             />
 
                             <MDBBtn color="link" className="px-2">
-                              <MDBIcon fas icon="plus" />
+                              <MDBIcon
+                                fas
+                                icon="plus"
+                                onClick={(e) =>
+                                  handleCartItemUpdatePlusButton(cartItem)
+                                }
+                              />
                             </MDBBtn>
                           </MDBCol>
                           <MDBCol md="3" lg="2" xl="2" className="text-end">

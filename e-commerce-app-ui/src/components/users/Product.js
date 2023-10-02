@@ -18,7 +18,7 @@ function Product(props) {
       productId: props.product.id,
       quantity: quantity,
     };
-    console.log(productInfo);
+    console.log(JSON.stringify(productInfo));
 
     fetch(baseUrl + "/Products/addToCart", {
       method: "POST",

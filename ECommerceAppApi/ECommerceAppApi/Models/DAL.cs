@@ -210,6 +210,7 @@ namespace ECommerceAppApi.Models
                 {
                     Cart cartItems = new Cart();
                     cartItems.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    cartItems.UserId = Convert.ToInt32(dt.Rows[i]["UserId"]);
                     cartItems.ProductId = Convert.ToInt32(dt.Rows[i]["ProductId"]);
                     cartItems.Quantity = Convert.ToInt32(dt.Rows[i]["Quantity"]);
                     cartItems.TotalPrice = Convert.ToDecimal(dt.Rows[i]["TotalPrice"]);

@@ -10,40 +10,22 @@ export default function Dashboard() {
 
   const [products, setProducts] = useState([]);
   const [isRedirect, setIsRedirect] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [userId] = useState(location.state.id);
+  // const [cartItems, setCartItems] = useState([]);
 
   const navigate = useNavigate();
 
   const handleGoToCart = (e) => {
     e.preventDefault();
 
-    const userId = { id: location.state.id };
-
-    fetch(baseUrl + "/Products/viewCartItems", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userId),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.statusCode === 200) {
-          setCartItems(data.listCartItems);
-          setIsRedirect(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setIsRedirect(true);
   };
 
   useEffect(() => {
     if (isRedirect) {
-      navigate("/cart", { state: { cartItems, products }, replace: false });
+      navigate("/cart", { state: { userId, products }, replace: false });
     }
-  }, [isRedirect, navigate, cartItems, products]);
+  }, [isRedirect, navigate, products, userId]);
 
   useEffect(() => {
     const userId = { id: location.state.id };
