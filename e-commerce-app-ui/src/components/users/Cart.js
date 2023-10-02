@@ -25,13 +25,15 @@ export default function Cart() {
   const navigate = useNavigate();
 
   function handleCartItemUpdateMinusButton(cartItem) {
-    const newCartItem = {
-      userId: cartItem.userId,
-      productId: cartItem.productId,
-      quantity: cartItem.quantity - 1,
-    };
+    if (cartItem.quantity !== 1) {
+      const newCartItem = {
+        userId: cartItem.userId,
+        productId: cartItem.productId,
+        quantity: cartItem.quantity - 1,
+      };
 
-    fetchCartItemsFunction(newCartItem);
+      fetchCartItemsFunction(newCartItem);
+    }
   }
 
   function handleCartItemUpdate(e, cartItem) {
@@ -78,6 +80,26 @@ export default function Cart() {
       });
   }
 
+  function handleDeleteCartItem(cartItemId) {
+    fetch(baseUrl + "/Products/deleteCartItem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: cartItemId }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.statusCode === 200) {
+          setFetchCartItems(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
     if (fetchCartItems) {
       fetch(baseUrl + "/Products/viewCartItems", {
@@ -92,6 +114,8 @@ export default function Cart() {
           console.log(data);
           if (data.statusCode === 200) {
             setCartItems(data.listCartItems);
+          } else {
+            setCartItems([]);
           }
         })
         .catch((err) => {
@@ -213,9 +237,13 @@ export default function Cart() {
                             </MDBTypography>
                           </MDBCol>
                           <MDBCol md="1" lg="1" xl="1" className="text-end">
-                            <a href="#!" className="text-muted">
-                              <MDBIcon fas icon="times" />
-                            </a>
+                            <MDBBtn
+                              color="none"
+                              style={{ border: 0, backgroundColor: "#eee" }}
+                              onClick={() => handleDeleteCartItem(cartItem.id)}
+                            >
+                              <MDBIcon fas icon="times" size="lg" />
+                            </MDBBtn>
                           </MDBCol>
                         </MDBRow>
                       ))}

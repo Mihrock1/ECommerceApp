@@ -193,6 +193,32 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response DeleteCartItem(Cart cart, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_deleteCartItem", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Id", cart.Id);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Item in the cart deleted successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Item in the cart could not be deleted";
+            }
+
+            return response;
+        }
+
         public Response ViewCartItems(Users users, SqlConnection connection)
         {
             Response response = new Response();

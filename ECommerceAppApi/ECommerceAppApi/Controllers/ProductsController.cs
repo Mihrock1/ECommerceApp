@@ -45,6 +45,20 @@ namespace ECommerceAppApi.Controllers
         }
 
         [HttpPost]
+        [Route("deleteCartItem")]
+        public Response DeleteCartItem(Cart cart)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.DeleteCartItem(cart, connection);
+
+            return response;
+        }
+
+        [HttpPost]
         [Route("viewCartItems")]
         public Response ViewCartItems(Users users)
         {
