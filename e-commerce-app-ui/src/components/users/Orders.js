@@ -21,6 +21,7 @@ export default function Orders() {
   const [fetchOrders, setFetchOrders] = useState(true);
 
   useEffect(() => {
+    console.log(user);
     if (fetchOrders) {
       fetch(baseUrl + "/Products/viewOrders", {
         method: "POST",

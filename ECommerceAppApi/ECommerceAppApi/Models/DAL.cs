@@ -92,10 +92,9 @@ namespace ECommerceAppApi.Models
                 user.Type = Convert.ToString(dt.Rows[0]["Type"]);
                 user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
                 user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
-                user.Password = Convert.ToString(dt.Rows[0]["Password"]);
 
                 response.StatusCode = 200;
-                response.Message = "User exists";
+                response.Message = "User details fetched";
                 response.User = user;
             }
             else

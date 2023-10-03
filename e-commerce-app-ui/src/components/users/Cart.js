@@ -18,7 +18,7 @@ import { baseUrl } from "../Constants";
 export default function Cart() {
   const location = useLocation();
 
-  const [user] = useState(location.state.user);
+  const [user, setUser] = useState([]);
   const [products] = useState(location.state.products);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
@@ -34,20 +34,22 @@ export default function Cart() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: user.id }),
+        body: JSON.stringify({ id: location.state.userId }),
       })
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
           if (data.statusCode === 200) {
             alert(data.message);
-            setFetchCartItems(true);
           } else {
             alert(data.message);
           }
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setFetchCartItems(true);
         });
     } else if (cartItems.length === 0) {
       alert("No items in cart");
@@ -66,7 +68,8 @@ export default function Cart() {
     if (isRedirect) {
       navigate("/myorders", { state: { user, products }, replace: false });
     }
-  }, [isRedirect, navigate, products, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRedirect, navigate]);
 
   function handleCartItemUpdateMinusButton(cartItem) {
     if (cartItem.quantity !== 1) {
@@ -151,7 +154,7 @@ export default function Cart() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: user.id }),
+        body: JSON.stringify({ id: location.state.userId }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -166,10 +169,30 @@ export default function Cart() {
           console.log(err);
         })
         .finally(() => {
-          setFetchCartItems(false);
+          fetch(baseUrl + "/Users/viewUser", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: location.state.userId }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              if (data.statusCode === 200) {
+                setUser(data.user);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+            .finally(() => {
+              setFetchCartItems(false);
+            });
         });
     }
-  }, [user, fetchCartItems]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchCartItems]);
 
   const noOfItems = () => {
     let noOfItems = 0;
@@ -191,7 +214,7 @@ export default function Cart() {
     return product;
   };
 
-  useEffect(() => {}, [cartItems]);
+  useEffect(() => {}, [cartItems, user]);
 
   return (
     <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>
