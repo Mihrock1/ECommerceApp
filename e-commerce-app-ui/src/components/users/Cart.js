@@ -18,7 +18,7 @@ import { baseUrl } from "../Constants";
 export default function Cart() {
   const location = useLocation();
 
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(location.state.user);
   const [products] = useState(location.state.products);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
@@ -34,7 +34,7 @@ export default function Cart() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: location.state.userId }),
+        body: JSON.stringify({ id: user.id }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -68,8 +68,7 @@ export default function Cart() {
     if (isRedirect) {
       navigate("/myorders", { state: { user, products }, replace: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRedirect, navigate]);
+  }, [isRedirect, navigate, products, user]);
 
   function handleCartItemUpdateMinusButton(cartItem) {
     if (cartItem.quantity !== 1) {
@@ -154,7 +153,7 @@ export default function Cart() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: location.state.userId }),
+        body: JSON.stringify({ id: user.id }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -174,7 +173,7 @@ export default function Cart() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id: location.state.userId }),
+            body: JSON.stringify({ id: user.id }),
           })
             .then((res) => res.json())
             .then((data) => {
@@ -191,8 +190,7 @@ export default function Cart() {
             });
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchCartItems]);
+  }, [fetchCartItems, user.id]);
 
   const noOfItems = () => {
     let noOfItems = 0;

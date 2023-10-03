@@ -8,7 +8,7 @@ import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 export default function Dashboard() {
   const location = useLocation();
 
-  const [userId] = useState(location.state.id);
+  const [user] = useState(location.state);
   const [products, setProducts] = useState([]);
   const [isRedirect, setIsRedirect] = useState(false);
 
@@ -22,9 +22,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (isRedirect) {
-      navigate("/cart", { state: { userId, products }, replace: false });
+      navigate("/cart", { state: { user, products }, replace: false });
     }
-  }, [isRedirect, navigate, products, userId]);
+  }, [isRedirect, navigate, products, user]);
 
   useEffect(() => {
     fetch(baseUrl + "/Products/viewProducts", {
@@ -32,7 +32,7 @@ export default function Dashboard() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: userId }),
+      body: JSON.stringify({ id: user.id }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -46,14 +46,14 @@ export default function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userId]);
+  }, [user.id]);
 
   return (
     <MDBContainer className="p-4 overflow-hidden">
       <MDBRow className="gx-4 gy-4">
         {products.map((product) => (
           <MDBCol md="4" key={product.id}>
-            <Product product={product} userId={userId} />
+            <Product product={product} userId={user.id} />
           </MDBCol>
         ))}
       </MDBRow>
