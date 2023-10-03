@@ -28,7 +28,7 @@ export default function Cart() {
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    if (user.fund - totalCost() >= 0) {
+    if (user.fund - totalCost() >= 0 && cartItems.length > 0) {
       fetch(baseUrl + "/Products/placeOrder", {
         method: "POST",
         headers: {
@@ -41,6 +41,7 @@ export default function Cart() {
           console.log(data);
           if (data.statusCode === 200) {
             alert(data.message);
+            setFetchCartItems(true);
           } else {
             alert(data.message);
           }
@@ -75,7 +76,7 @@ export default function Cart() {
         quantity: cartItem.quantity - 1,
       };
 
-      fetchCartItemsFunction(newCartItem);
+      updateCartItemsFunction(newCartItem);
     }
   }
 
@@ -89,7 +90,7 @@ export default function Cart() {
         quantity: parseInt(e.target.value),
       };
 
-      fetchCartItemsFunction(newCartItem);
+      updateCartItemsFunction(newCartItem);
     }
   }
 
@@ -100,10 +101,10 @@ export default function Cart() {
       quantity: cartItem.quantity + 1,
     };
 
-    fetchCartItemsFunction(newCartItem);
+    updateCartItemsFunction(newCartItem);
   }
 
-  function fetchCartItemsFunction(newCartItem) {
+  function updateCartItemsFunction(newCartItem) {
     fetch(baseUrl + "/Products/updateCartItem", {
       method: "POST",
       headers: {
@@ -163,11 +164,11 @@ export default function Cart() {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setFetchCartItems(false);
         });
     }
-    return () => {
-      setFetchCartItems(false);
-    };
   }, [user, fetchCartItems]);
 
   const noOfItems = () => {

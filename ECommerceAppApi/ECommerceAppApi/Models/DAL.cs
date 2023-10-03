@@ -338,6 +338,32 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response DeleteOrder(Orders order, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_deleteOrder", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@OrderNo", order.OrderNo);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Order cancelled successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Order could not be cancelled";
+            }
+
+            return response;
+        }
+
         public Response ViewOrderItems(Orders orders, SqlConnection connection)
         {
             Response response = new Response();

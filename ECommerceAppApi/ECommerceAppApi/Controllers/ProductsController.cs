@@ -115,6 +115,20 @@ namespace ECommerceAppApi.Controllers
         }
 
         [HttpPost]
+        [Route("deleteOrder")]
+        public Response DeleteOrder(Orders orders)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.DeleteOrder(orders, connection);
+
+            return response;
+        }
+
+        [HttpPost]
         [Route("viewProducts")]
         public Response ViewProducts(Users users)
         {
