@@ -19,17 +19,12 @@ export default function Cart() {
   const location = useLocation();
 
   const [user] = useState(location.state.user);
+  const [products] = useState(location.state.products);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
   const [isRedirect, setIsRedirect] = useState(false);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isRedirect) {
-      navigate("/myorders", { state: { user }, replace: false });
-    }
-  }, [isRedirect, navigate, user]);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -46,7 +41,6 @@ export default function Cart() {
           console.log(data);
           if (data.statusCode === 200) {
             alert(data.message);
-            setIsRedirect(true);
           } else {
             alert(data.message);
           }
@@ -54,10 +48,24 @@ export default function Cart() {
         .catch((err) => {
           console.log(err);
         });
+    } else if (cartItems.length === 0) {
+      alert("No items in cart");
     } else {
       alert("Insufficient Funds");
     }
   };
+
+  const handleGoToMyOrders = (e) => {
+    e.preventDefault();
+
+    setIsRedirect(true);
+  };
+
+  useEffect(() => {
+    if (isRedirect) {
+      navigate("/myorders", { state: { user, products }, replace: false });
+    }
+  }, [isRedirect, navigate, products, user]);
 
   function handleCartItemUpdateMinusButton(cartItem) {
     if (cartItem.quantity !== 1) {
@@ -342,6 +350,18 @@ export default function Cart() {
                         onClick={handlePlaceOrder}
                       >
                         Place Order
+                      </MDBBtn>
+
+                      <hr className="my-4" />
+
+                      <MDBBtn
+                        outline
+                        color="dark"
+                        size="lg"
+                        block
+                        onClick={handleGoToMyOrders}
+                      >
+                        Go to My Orders
                       </MDBBtn>
                     </div>
                   </MDBCol>

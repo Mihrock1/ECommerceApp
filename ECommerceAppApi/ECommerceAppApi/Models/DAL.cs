@@ -338,6 +338,53 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response ViewOrderItems(Orders orders, SqlConnection connection)
+        {
+            Response response = new Response();
+            List<OrderItems> orderItemsList = new List<OrderItems>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewOrderItems", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.AddWithValue("@OrderNo", orders.OrderNo);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    OrderItems orderItem = new OrderItems();
+                    orderItem.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    orderItem.OrderNo = Guid.Parse(Convert.ToString(dt.Rows[i]["OrderNo"]));
+                    orderItem.ProductId = Convert.ToInt32(dt.Rows[i]["ProductId"]);
+                    orderItem.Quantity = Convert.ToInt32(dt.Rows[i]["Quantity"]);
+                    orderItem.TotalPrice = Convert.ToDecimal(dt.Rows[i]["TotalPrice"]);
+                    orderItemsList.Add(orderItem);
+                }
+
+                if (orderItemsList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Order Items fetched";
+                    response.ListOrderItems = orderItemsList;
+                }
+                else
+                {
+                    response.StatusCode = 401;
+                    response.Message = "Order Items could not be fetched";
+                    response.ListOrderItems = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.Message = "Order Items could not be fetched";
+                response.ListOrderItems = null;
+            }
+
+            return response;
+        }
+
         public Response AddProducts(Products products, SqlConnection connection)
         {
             Response response = new Response();

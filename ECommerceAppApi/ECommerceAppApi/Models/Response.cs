@@ -11,7 +11,7 @@
         public List<Cart>? ListCartItems { get; set; }
         public List<Orders>? ListOrders { get; set; }
         public Orders? Order { get; set; }
-        public List<OrderItems>? ListItems { get; set; }
-        public OrderItems? Item { get; set; }
+        public List<OrderItems>? ListOrderItems { get; set; }
+        public OrderItems? OrderItem { get; set; }
     }
 }

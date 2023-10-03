@@ -101,6 +101,20 @@ namespace ECommerceAppApi.Controllers
         }
 
         [HttpPost]
+        [Route("viewOrderItems")]
+        public Response ViewOrderItems(Orders orders)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.ViewOrderItems(orders, connection);
+
+            return response;
+        }
+
+        [HttpPost]
         [Route("viewProducts")]
         public Response ViewProducts(Users users)
         {
