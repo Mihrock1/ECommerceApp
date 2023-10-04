@@ -56,5 +56,19 @@ namespace ECommerceAppApi.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        [Route("deleteUser")]
+        public Response DeleteUser(Users users)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.DeleteUser(users, connection);
+
+            return response;
+        }
     }
 }

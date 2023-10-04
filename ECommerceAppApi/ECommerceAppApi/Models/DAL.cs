@@ -107,6 +107,57 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response ViewUsers(Users users, SqlConnection connection)
+        {
+            Response response = new Response();
+            List<Users> usersList = new List<Users>();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewUsers", connection);
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+            da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Users user = new Users();
+                    user.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
+                    user.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                    user.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                    user.Password = Convert.ToString(dt.Rows[i]["Password"]);
+                    user.Email = Convert.ToString(dt.Rows[i]["Email"]);
+                    user.Fund = Convert.ToDecimal(dt.Rows[i]["Fund"]);
+                    user.Type = Convert.ToString(dt.Rows[i]["Type"]);
+                    user.CreatedOn = Convert.ToDateTime(dt.Rows[i]["CreatedOn"]);
+                    user.AccountStatus = Convert.ToString(dt.Rows[i]["AccountStatus"]);
+                    usersList.Add(user);
+                }
+
+                if (usersList.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Users fetched";
+                    response.ListUsers = usersList;
+                }
+                else
+                {
+                    response.StatusCode = 401;
+                    response.Message = "Users could not be fetched";
+                    response.ListUsers = null;
+                }
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.Message = "Users could not be fetched";
+                response.ListUsers = null;
+            }
+
+            return response;
+        }
+
         public Response UpdateUser(Users users, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand("sp_update", connection);
@@ -132,6 +183,32 @@ namespace ECommerceAppApi.Models
             {
                 response.StatusCode = 400;
                 response.Message = "User could not be updated";
+            }
+
+            return response;
+        }
+
+        public Response DeleteUser(Users users, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_deleteUser", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Id", users.Id);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "User deleted successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Admin user cannot be deleted";
             }
 
             return response;
@@ -466,56 +543,6 @@ namespace ECommerceAppApi.Models
             {
                 response.StatusCode = 400;
                 response.Message = "Product could not be updated";
-            }
-
-            return response;
-        }
-
-        public Response ViewUsers(Users users, SqlConnection connection)
-        {
-            Response response = new Response();
-            List<Users> usersList = new List<Users>();
-            SqlDataAdapter da = new SqlDataAdapter("sp_viewUsers", connection);
-            da.SelectCommand.CommandType = CommandType.StoredProcedure;
-
-            da.SelectCommand.Parameters.AddWithValue("@Id", users.Id);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            if (dt.Rows.Count > 0)
-            {
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    Users user = new Users();
-                    user.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
-                    user.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
-                    user.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
-                    user.Password = Convert.ToString(dt.Rows[i]["Password"]);
-                    user.Email = Convert.ToString(dt.Rows[i]["Email"]);
-                    user.Fund = Convert.ToDecimal(dt.Rows[i]["Fund"]);
-                    user.Type = Convert.ToString(dt.Rows[i]["Type"]);
-                    user.CreatedOn = Convert.ToDateTime(dt.Rows[i]["CreatedOn"]);
-                    usersList.Add(user);
-                }
-
-                if (usersList.Count > 0)
-                {
-                    response.StatusCode = 200;
-                    response.Message = "Users fetched";
-                    response.ListUsers = usersList;
-                }
-                else
-                {
-                    response.StatusCode = 401;
-                    response.Message = "Users could not be fetched";
-                    response.ListUsers = null;
-                }
-            }
-            else
-            {
-                response.StatusCode = 401;
-                response.Message = "Users could not be fetched";
-                response.ListUsers = null;
             }
 
             return response;
