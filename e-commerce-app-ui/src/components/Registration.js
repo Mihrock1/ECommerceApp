@@ -1,10 +1,73 @@
-import React from "react";
-import { MDBBtn, MDBContainer, MDBInput } from "mdb-react-ui-kit";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
+import { baseUrl } from "./Constants";
 
 function Registration() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRedirect, setIsRedirect] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const registrationInfo = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
+
+    fetch(baseUrl + "/Users/registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(registrationInfo),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        alert(data.message);
+        if (data.statusCode === 200) {
+          setIsRedirect(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    if (isRedirect) {
+      navigate("/", { replace: true });
+    }
+  }, [isRedirect, navigate]);
+
   return (
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-      {/* <h1 className="mb-4">Sign Up</h1>
+      <h1 className="mb-4">Sign Up</h1>
+      <MDBInput
+        wrapperClass="mb-4"
+        label="First Name"
+        id="firstName"
+        type="text"
+        required
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+      />
+      <MDBInput
+        wrapperClass="mb-4"
+        label="Last Name"
+        id="lastName"
+        type="text"
+        required
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      />
       <MDBInput
         wrapperClass="mb-4"
         label="Email address"
@@ -32,7 +95,7 @@ function Registration() {
         <p>
           Already a member? <Link to="/">Login</Link>
         </p>
-      </div> */}
+      </div>
     </MDBContainer>
   );
 }

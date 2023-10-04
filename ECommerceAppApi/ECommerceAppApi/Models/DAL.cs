@@ -14,9 +14,6 @@ namespace ECommerceAppApi.Models
             cmd.Parameters.AddWithValue("@LastName", users.LastName);
             cmd.Parameters.AddWithValue("@Password", users.Password);
             cmd.Parameters.AddWithValue("@Email", users.Email);
-            cmd.Parameters.AddWithValue("@Fund", 0);
-            cmd.Parameters.AddWithValue("@Type", "User");
-            cmd.Parameters.AddWithValue("@Status", 0);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -26,12 +23,12 @@ namespace ECommerceAppApi.Models
             if (i > 0)
             {
                 response.StatusCode = 200;
-                response.Message = "User registered successfully";
+                response.Message = "User registered successfully, but pending activation";
             }
             else
             {
                 response.StatusCode = 400;
-                response.Message = "User registration failed";
+                response.Message = "User registration failed as User already exists, please login";
             }
 
             return response;
@@ -58,15 +55,17 @@ namespace ECommerceAppApi.Models
                 user.Email = Convert.ToString(dt.Rows[0]["Email"]);
                 user.Type = Convert.ToString(dt.Rows[0]["Type"]);
                 user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
+                user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
+                user.AccountStatus = Convert.ToString(dt.Rows[0]["AccountStatus"]);
 
                 response.StatusCode = 200;
-                response.Message = "User is valid";
+                response.Message = "User login successfull";
                 response.User = user;
             }
             else
             {
                 response.StatusCode = 401;
-                response.Message = "User is invalid";
+                response.Message = "User status 'Pending' or User does not exist";
                 response.User = null;
             }
 
@@ -92,6 +91,7 @@ namespace ECommerceAppApi.Models
                 user.Type = Convert.ToString(dt.Rows[0]["Type"]);
                 user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
                 user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
+                user.AccountStatus = Convert.ToString(dt.Rows[0]["AccountStatus"]);
 
                 response.StatusCode = 200;
                 response.Message = "User details fetched";
