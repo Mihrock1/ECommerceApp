@@ -21,7 +21,6 @@ export default function Orders() {
   const [fetchOrders, setFetchOrders] = useState(true);
 
   useEffect(() => {
-    console.log(user);
     if (fetchOrders) {
       fetch(baseUrl + "/Products/viewOrders", {
         method: "POST",
@@ -60,29 +59,36 @@ export default function Orders() {
           <MDBCard style={{ borderRadius: "10px" }}>
             <MDBCardHeader className="px-4 py-5">
               <MDBTypography tag="h4" className="text-muted mb-4">
-                Thanks for your Orders,
-                <span style={{ color: "#a8729a" }}> {user.firstName}</span>!
+                <span style={{ color: "#a8729a" }}>
+                  {user.firstName}'s Orders
+                </span>
               </MDBTypography>
 
-              {orders.map((order) => (
-                <MDBContainer className="py-5 h-100" key={order.orderNo}>
-                  <MDBTypography
-                    tag="h6"
-                    className="text-muted mb-4 text-uppercase"
-                  >
-                    Order No: {order.orderNo}
-                  </MDBTypography>
-                  <hr
-                    className="mb-3"
-                    style={{ backgroundColor: "#e0e0e0", opacity: 1 }}
-                  />
-                  <OrderItems
-                    order={order}
-                    products={products}
-                    setFetchOrders={setFetchOrders}
-                  />
-                </MDBContainer>
-              ))}
+              {orders.length !== 0 ? (
+                orders.map((order) => (
+                  <MDBContainer className="py-5 h-100" key={order.orderNo}>
+                    <MDBTypography
+                      tag="h6"
+                      className="text-muted mb-4 text-uppercase"
+                    >
+                      Order No: {order.orderNo}
+                    </MDBTypography>
+                    <hr
+                      className="mb-3"
+                      style={{ backgroundColor: "#e0e0e0", opacity: 1 }}
+                    />
+                    <OrderItems
+                      order={order}
+                      products={products}
+                      setFetchOrders={setFetchOrders}
+                    />
+                  </MDBContainer>
+                ))
+              ) : (
+                <MDBTypography>
+                  <span style={{ color: "#a8729a" }}>No orders found!</span>
+                </MDBTypography>
+              )}
             </MDBCardHeader>
           </MDBCard>
           <MDBContainer className="py-5 h-100">
@@ -94,7 +100,7 @@ export default function Orders() {
                   block
                   onClick={() => navigate(-1)}
                 >
-                  Go back to Cart
+                  Go back
                 </MDBBtn>
               </MDBCol>
             </MDBRow>

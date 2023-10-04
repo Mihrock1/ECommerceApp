@@ -66,7 +66,7 @@ export default function Cart() {
 
   useEffect(() => {
     if (isRedirect) {
-      navigate("/myorders", { state: { user, products }, replace: false });
+      navigate("/myorders", { state: { user, products } });
     }
   }, [isRedirect, navigate, products, user]);
 

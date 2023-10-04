@@ -40,9 +40,9 @@ function Login() {
   useEffect(() => {
     if (isRedirect) {
       if (user.type === "User") {
-        navigate("/dashboard", { state: user, replace: false });
+        navigate("/dashboard", { state: user, replace: true });
       } else if (user.type === "Admin") {
-        navigate("/admindashboard", { state: user, replace: false });
+        navigate("/admindashboard", { state: user, replace: true });
       }
     }
   }, [isRedirect, navigate, user]);

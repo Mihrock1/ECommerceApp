@@ -126,7 +126,6 @@ namespace ECommerceAppApi.Models
                     user.Id = Convert.ToInt32(dt.Rows[i]["Id"]);
                     user.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
                     user.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
-                    user.Password = Convert.ToString(dt.Rows[i]["Password"]);
                     user.Email = Convert.ToString(dt.Rows[i]["Email"]);
                     user.Fund = Convert.ToDecimal(dt.Rows[i]["Fund"]);
                     user.Type = Convert.ToString(dt.Rows[i]["Type"]);
@@ -160,7 +159,7 @@ namespace ECommerceAppApi.Models
 
         public Response UpdateUser(Users users, SqlConnection connection)
         {
-            SqlCommand cmd = new SqlCommand("sp_update", connection);
+            SqlCommand cmd = new SqlCommand("sp_updateUser", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@Id", users.Id);
@@ -188,6 +187,32 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
+        public Response ActivateUser(Users users, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_activateUser", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Id", users.Id);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "User activated successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "User is already active!";
+            }
+
+            return response;
+        }
+
         public Response DeleteUser(Users users, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand("sp_deleteUser", connection);
@@ -208,7 +233,7 @@ namespace ECommerceAppApi.Models
             else
             {
                 response.StatusCode = 400;
-                response.Message = "Admin user cannot be deleted";
+                response.Message = "User could not be deleted";
             }
 
             return response;

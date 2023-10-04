@@ -7,7 +7,6 @@ import Dashboard from "./users/Dashboard";
 import Profile from "./users/Profile";
 import Cart from "./users/Cart";
 import AdminDashboard from "./admin/AdminDashboard";
-import AdminOrders from "./admin/AdminOrders";
 import CustomerList from "./admin/CustomerList";
 import Product from "./users/Product";
 
@@ -22,7 +21,6 @@ function RouterPage() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/adminorders" element={<AdminOrders />} />
         <Route path="/customers" element={<CustomerList />} />
         <Route path="/product" element={<Product />} />
       </Routes>

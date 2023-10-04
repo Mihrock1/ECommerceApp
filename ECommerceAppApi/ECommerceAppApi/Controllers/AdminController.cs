@@ -70,5 +70,19 @@ namespace ECommerceAppApi.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        [Route("activateUser")]
+        public Response ActivateUser(Users users)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.ActivateUser(users, connection);
+
+            return response;
+        }
     }
 }

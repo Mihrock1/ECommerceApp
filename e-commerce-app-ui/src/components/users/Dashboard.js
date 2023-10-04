@@ -22,7 +22,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (isRedirect) {
-      navigate("/cart", { state: { user, products }, replace: false });
+      navigate("/cart", { state: { user, products } });
     }
   }, [isRedirect, navigate, products, user]);
 
