@@ -1,51 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { baseUrl } from "./Constants";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
-  const [user, setUser] = useState([]);
-
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const loginInfo = { email: email, password: password };
+    window.localStorage.setItem("email", email);
+    window.localStorage.setItem("password", password);
 
-    fetch(baseUrl + "/Users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginInfo),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.statusCode === 200) {
-          setUser(data.user);
-          setIsRedirect(true);
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setIsRedirect(true);
   };
 
   useEffect(() => {
     if (isRedirect) {
-      if (user.type === "User") {
-        navigate("/dashboard", { state: user, replace: true });
-      } else if (user.type === "Admin") {
-        navigate("/admindashboard", { state: user, replace: true });
-      }
+      navigate("/dashboard", { replace: true });
     }
-  }, [isRedirect, navigate, user]);
+  }, [isRedirect, navigate]);
 
   return (
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
@@ -57,7 +32,7 @@ function Login() {
         type="email"
         required
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => setemail(e.target.value)}
       />
       <MDBInput
         wrapperClass="mb-4"
@@ -66,7 +41,7 @@ function Login() {
         type="password"
         required
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setpassword(e.target.value)}
       />
 
       <MDBBtn className="mb-4" onClick={handleSubmit}>

@@ -1,36 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MDBBtn, MDBContainer } from "mdb-react-ui-kit";
 import { baseUrl } from "../Constants";
 import Product from "./Product";
 import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 
-export default function Dashboard() {
-  const location = useLocation();
-
-  const [user] = useState(location.state);
-  const [products, setProducts] = useState([]);
-  const [isRedirect, setIsRedirect] = useState(false);
-
+export default function Dashboard(props) {
   const navigate = useNavigate();
+  const [user] = useState(props.user);
+  const [products, setProducts] = useState([]);
 
   const handleGoToCart = (e) => {
     e.preventDefault();
-
-    setIsRedirect(true);
+    navigate("/cart", { state: { products }, replace: false });
   };
-
-  useEffect(() => {
-    if (isRedirect) {
-      navigate("/cart", { state: { user, products } });
-    }
-  }, [isRedirect, navigate, products, user]);
 
   useEffect(() => {
     fetch(baseUrl + "/Products/viewProducts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + props.jwtToken,
       },
       body: JSON.stringify({ id: user.id }),
     })
@@ -45,15 +35,22 @@ export default function Dashboard() {
       })
       .catch((err) => {
         console.log(err);
+        console.log("Redirecting to login page...");
+        navigate("/", { replace: true });
       });
-  }, [user.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, user.id]);
 
   return (
     <MDBContainer className="p-4 overflow-hidden">
       <MDBRow className="gx-4 gy-4">
         {products.map((product) => (
           <MDBCol md="4" key={product.id}>
-            <Product product={product} userId={user.id} />
+            <Product
+              product={product}
+              userId={user.id}
+              jwtToken={props.jwtToken}
+            />
           </MDBCol>
         ))}
       </MDBRow>

@@ -15,6 +15,7 @@ export default function AdminDashboard() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
       },
       body: JSON.stringify({ id: user.id }),
     })

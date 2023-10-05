@@ -7,18 +7,27 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../Constants";
 import OrderItems from "./OrderItems";
 
-export default function Orders() {
+export default function Orders(props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user] = useState(location.state.user);
-  const [products] = useState(location.state.products);
+  const [user] = useState(props.user);
+  const [products, setProducts] = useState(location.state.products);
   const [orders, setOrders] = useState([]);
   const [fetchOrders, setFetchOrders] = useState(true);
+
+  // useLayoutEffect(() => {
+  //   if (location.state === null) {
+  //     // alert("You are not logged in, Redirecting to login page...");
+  //     navigate("/", { replace: true });
+  //   } else {
+  //     setProducts(location.state.products);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (fetchOrders) {
@@ -26,6 +35,7 @@ export default function Orders() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ id: user.id }),
       })
@@ -40,6 +50,8 @@ export default function Orders() {
         })
         .catch((err) => {
           console.log(err);
+          console.log("Redirecting to login page...");
+          navigate("/", { replace: true });
         })
         .finally(() => {
           setFetchOrders(false);
@@ -81,6 +93,7 @@ export default function Orders() {
                       order={order}
                       products={products}
                       setFetchOrders={setFetchOrders}
+                      jwtToken={props.jwtToken}
                     />
                   </MDBContainer>
                 ))
@@ -98,9 +111,9 @@ export default function Orders() {
                   color="dark"
                   size="lg"
                   block
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(-1, { replace: true })}
                 >
-                  Go back
+                  Go to Cart
                 </MDBBtn>
               </MDBCol>
             </MDBRow>

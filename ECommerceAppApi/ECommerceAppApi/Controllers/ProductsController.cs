@@ -1,4 +1,5 @@
 ﻿using ECommerceAppApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace ECommerceAppApi.Controllers
             _configuration = configuration;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("addToCart")]
         public Response AddToCart(Cart cart)
@@ -30,6 +32,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("updateCartItem")]
         public Response UpdateCartItem(Cart cart)
@@ -44,6 +47,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("deleteCartItem")]
         public Response DeleteCartItem(Cart cart)
@@ -58,6 +62,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("viewCartItems")]
         public Response ViewCartItems(Users users)
@@ -72,6 +77,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("placeOrder")]
         public Response PlaceOrder(Users users)
@@ -86,6 +92,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("viewOrders")]
         public Response ViewOrders(Users users)
@@ -100,6 +107,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("viewOrderItems")]
         public Response ViewOrderItems(Orders orders)
@@ -114,6 +122,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("deleteOrder")]
         public Response DeleteOrder(Orders orders)
@@ -128,6 +137,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("viewProducts")]
         public Response ViewProducts(Users users)

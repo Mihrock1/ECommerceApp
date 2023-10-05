@@ -25,6 +25,7 @@ function Product(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify(productInfo),
       })

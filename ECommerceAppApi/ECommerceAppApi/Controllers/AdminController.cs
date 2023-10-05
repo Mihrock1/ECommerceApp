@@ -1,4 +1,5 @@
 ﻿using ECommerceAppApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
@@ -15,6 +16,7 @@ namespace ECommerceAppApi.Controllers
             _configuration = configuration;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("addProducts")]
         public Response AddProducts(Products products)
@@ -29,6 +31,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("updateProducts")]
         public Response UpdateProducts(Products products)
@@ -43,6 +46,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("viewUsers")]
         public Response ViewUsers(Users users)
@@ -57,6 +61,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("deleteUser")]
         public Response DeleteUser(Users users)
@@ -71,6 +76,7 @@ namespace ECommerceAppApi.Controllers
             return response;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("activateUser")]
         public Response ActivateUser(Users users)

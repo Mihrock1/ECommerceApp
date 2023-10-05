@@ -1,5 +1,10 @@
-﻿using System.Data;
+﻿using ECommerceAppApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace ECommerceAppApi.Models
 {
@@ -34,7 +39,7 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response Login(Users users, SqlConnection connection)
+        public Users? Login(Users users, SqlConnection connection)
         {
             SqlDataAdapter da = new SqlDataAdapter("sp_login", connection);
             da.SelectCommand.CommandType = CommandType.StoredProcedure;
@@ -45,9 +50,8 @@ namespace ECommerceAppApi.Models
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            Response response = new Response();
             Users user = new Users();
-            if(dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 user.Id = Convert.ToInt32(dt.Rows[0]["Id"]);
                 user.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
@@ -58,19 +62,12 @@ namespace ECommerceAppApi.Models
                 user.CreatedOn = Convert.ToDateTime(dt.Rows[0]["CreatedOn"]);
                 user.AccountStatus = Convert.ToString(dt.Rows[0]["AccountStatus"]);
 
-                response.StatusCode = 200;
-                response.Message = "User login successfull";
-                response.User = user;
+                return user;
             }
-            else
-            {
-                response.StatusCode = 401;
-                response.Message = "User status 'Pending' or User does not exist";
-                response.User = null;
-            }
-
-            return response;
-        }
+            else {
+                return null;
+                }
+    }
 
         public Response ViewUser(Users users, SqlConnection connection) {
             SqlDataAdapter da = new SqlDataAdapter("sp_viewUser", connection);

@@ -66,6 +66,7 @@ export default function CustomerList(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
       },
       body: JSON.stringify({ id: userId }),
     })
@@ -101,6 +102,7 @@ export default function CustomerList(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
         },
         body: JSON.stringify({ id: userId }),
       })
@@ -127,6 +129,7 @@ export default function CustomerList(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
         },
         body: JSON.stringify({ id: props.user.id }),
       })

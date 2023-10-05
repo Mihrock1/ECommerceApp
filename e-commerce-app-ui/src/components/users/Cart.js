@@ -11,20 +11,27 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../Constants";
 
-export default function Cart() {
+export default function Cart(props) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const [user, setUser] = useState(location.state.user);
+  const [user] = useState(props.user);
   const [products] = useState(location.state.products);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
-  const [isRedirect, setIsRedirect] = useState(false);
 
-  const navigate = useNavigate();
+  // useMemo(() => {
+  //   if (location.state === null) {
+  //     // alert("You are not logged in, Redirecting to login page...");
+  //     navigate("/", { replace: true });
+  //   } else {
+  //     setProducts(location.state.products);
+  //   }
+  // }, []);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -33,6 +40,7 @@ export default function Cart() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
         },
         body: JSON.stringify({ id: user.id }),
       })
@@ -47,6 +55,8 @@ export default function Cart() {
         })
         .catch((err) => {
           console.log(err);
+          console.log("Redirecting to login page...");
+          navigate("/", { replace: true });
         })
         .finally(() => {
           setFetchCartItems(true);
@@ -60,15 +70,8 @@ export default function Cart() {
 
   const handleGoToMyOrders = (e) => {
     e.preventDefault();
-
-    setIsRedirect(true);
+    navigate("/myorders", { state: { products }, replace: false });
   };
-
-  useEffect(() => {
-    if (isRedirect) {
-      navigate("/myorders", { state: { user, products } });
-    }
-  }, [isRedirect, navigate, products, user]);
 
   function handleCartItemUpdateMinusButton(cartItem) {
     if (cartItem.quantity !== 1) {
@@ -111,6 +114,7 @@ export default function Cart() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
       },
       body: JSON.stringify(newCartItem),
     })
@@ -123,6 +127,8 @@ export default function Cart() {
       })
       .catch((err) => {
         console.log(err);
+        console.log("Redirecting to login page...");
+        navigate("/", { replace: true });
       });
   }
 
@@ -131,6 +137,7 @@ export default function Cart() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
       },
       body: JSON.stringify({ id: cartItemId }),
     })
@@ -143,6 +150,8 @@ export default function Cart() {
       })
       .catch((err) => {
         console.log(err);
+        console.log("Redirecting to login page...");
+        navigate("/", { replace: true });
       });
   }
 
@@ -152,6 +161,7 @@ export default function Cart() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
         },
         body: JSON.stringify({ id: user.id }),
       })
@@ -166,12 +176,15 @@ export default function Cart() {
         })
         .catch((err) => {
           console.log(err);
+          console.log("Redirecting to login page...");
+          navigate("/", { replace: true });
         })
         .finally(() => {
           fetch(baseUrl + "/Users/viewUser", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
             },
             body: JSON.stringify({ id: user.id }),
           })
@@ -179,11 +192,13 @@ export default function Cart() {
             .then((data) => {
               console.log(data);
               if (data.statusCode === 200) {
-                setUser(data.user);
+                // setUser(data.user);
               }
             })
             .catch((err) => {
               console.log(err);
+              console.log("Redirecting to login page...");
+              navigate("/", { replace: true });
             })
             .finally(() => {
               setFetchCartItems(false);
@@ -323,9 +338,9 @@ export default function Cart() {
                               className="mx-2"
                               color="dark"
                               size="lg"
-                              onClick={() => navigate(-1)}
+                              onClick={() => navigate(-1, { replace: true })}
                             >
-                              Back to Dashboard
+                              Go to Dashboard
                             </MDBBtn>
                           </MDBCardText>
                         </MDBTypography>

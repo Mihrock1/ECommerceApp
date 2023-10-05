@@ -15,6 +15,7 @@ export default function OrderItems(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + props.jwtToken,
       },
       body: JSON.stringify({ orderNo: props.order.orderNo }),
     })
@@ -40,6 +41,7 @@ export default function OrderItems(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ orderNo: props.order.orderNo }),
       })
