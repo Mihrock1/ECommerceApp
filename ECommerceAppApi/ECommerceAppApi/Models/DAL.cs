@@ -184,12 +184,13 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response ActivateUser(Users users, SqlConnection connection)
+        public Response ActivateUser(UsersArray usersArray, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand("sp_activateUser", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@Id", users.Id);
+            cmd.Parameters.AddWithValue("@CustomerId", usersArray.Customer.Id);
+            cmd.Parameters.AddWithValue("@AdminId", usersArray.Admin.Id);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -210,12 +211,13 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response DeleteUser(Users users, SqlConnection connection)
+        public Response DeleteUser(UsersArray usersArray, SqlConnection connection)
         {
             SqlCommand cmd = new SqlCommand("sp_deleteUser", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@Id", users.Id);
+            cmd.Parameters.AddWithValue("@CustomerId", usersArray.Customer.Id);
+            cmd.Parameters.AddWithValue("@AdminId", usersArray.Admin.Id);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();

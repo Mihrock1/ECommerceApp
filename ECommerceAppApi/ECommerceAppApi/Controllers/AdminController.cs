@@ -64,14 +64,14 @@ namespace ECommerceAppApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("deleteUser")]
-        public Response DeleteUser(Users users)
+        public Response DeleteUser(UsersArray usersArray)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.DeleteUser(users, connection);
+            Response response = dal.DeleteUser(usersArray, connection);
 
             return response;
         }
@@ -79,14 +79,14 @@ namespace ECommerceAppApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("activateUser")]
-        public Response ActivateUser(Users users)
+        public Response ActivateUser(UsersArray usersArray)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.ActivateUser(users, connection);
+            Response response = dal.ActivateUser(usersArray, connection);
 
             return response;
         }

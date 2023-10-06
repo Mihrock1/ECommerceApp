@@ -11,6 +11,11 @@ export default function AdminDashboard(props) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    if (props.user.type === "User") {
+      alert("This page is not for users, Redirecting to login...");
+      navigate("/", { replace: true });
+    }
+
     fetch(baseUrl + "/Products/viewProducts", {
       method: "POST",
       headers: {
@@ -38,7 +43,11 @@ export default function AdminDashboard(props) {
   return (
     <MDBContainer className="p-1 overflow-hidden">
       <MDBRow>
-        <CustomerList user={props.user} products={products} />
+        <CustomerList
+          user={props.user}
+          jwtToken={props.jwtToken}
+          products={products}
+        />
       </MDBRow>
     </MDBContainer>
   );

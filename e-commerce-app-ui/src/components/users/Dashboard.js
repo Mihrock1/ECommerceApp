@@ -15,6 +15,11 @@ export default function Dashboard(props) {
   };
 
   useEffect(() => {
+    if (props.user.type === "Admin") {
+      alert("This page is not for admin, Redirecting to login...");
+      navigate("/", { replace: true });
+    }
+
     fetch(baseUrl + "/Products/viewProducts", {
       method: "POST",
       headers: {

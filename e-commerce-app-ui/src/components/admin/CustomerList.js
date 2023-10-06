@@ -61,14 +61,19 @@ export default function CustomerList(props) {
     return date + " " + time;
   }
 
-  function handleUserActivation(userId) {
+  function handleUserActivation(customer, admin) {
+    const activateRequestBody = {
+      customer: { id: customer.id },
+      admin: { id: admin.id },
+    };
+
     fetch(baseUrl + "/Admin/activateUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + props.jwtToken,
       },
-      body: JSON.stringify({ id: userId }),
+      body: JSON.stringify(activateRequestBody),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -91,13 +96,19 @@ export default function CustomerList(props) {
     console.log(customer);
     navigate("/myorders", {
       state: { user: customer, products: props.products },
+      replace: false,
     });
   }
 
-  function handleDeleteUser(userId) {
+  function handleDeleteUser(customer, admin) {
     const confirmDeletion = window.confirm(
       "Are you sure you want to delete this user?"
     );
+
+    const deleteRequestBody = {
+      customer: { id: customer.id },
+      admin: { id: admin.id },
+    };
 
     if (confirmDeletion) {
       fetch(baseUrl + "/Admin/deleteUser", {
@@ -106,7 +117,7 @@ export default function CustomerList(props) {
           "Content-Type": "application/json",
           Authorization: "Bearer " + props.jwtToken,
         },
-        body: JSON.stringify({ id: userId }),
+        body: JSON.stringify(deleteRequestBody),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -141,7 +152,9 @@ export default function CustomerList(props) {
         .then((data) => {
           console.log(data);
           if (data.statusCode === 200) {
-            setCustomerList(data.listUsers);
+            setCustomerList(
+              data.listUsers.filter((user) => user.type === "User")
+            );
           } else {
             alert(data.message);
           }
@@ -195,9 +208,7 @@ export default function CustomerList(props) {
                 <p className="fw-normal mb-1">{customer.type}</p>
               </td>
               <td>
-                <p className="fw-normal mb-1">
-                  {customer.type === "User" ? "$" + customer.fund : ""}
-                </p>
+                <p className="fw-normal mb-1">{customer.fund}</p>
               </td>
               <td>
                 <p className="fw-normal mb-1">
@@ -212,7 +223,7 @@ export default function CustomerList(props) {
                 <MDBBtn
                   color="success"
                   rounded
-                  onClick={() => handleUserActivation(props.user.id)}
+                  onClick={() => handleUserActivation(customer, props.user)}
                 >
                   Activate
                 </MDBBtn>
@@ -230,7 +241,7 @@ export default function CustomerList(props) {
                 <MDBBtn
                   color="danger"
                   rounded
-                  onClick={() => handleDeleteUser(props.user.id)}
+                  onClick={() => handleDeleteUser(customer, props.user)}
                 >
                   Delete
                 </MDBBtn>

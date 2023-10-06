@@ -61,7 +61,10 @@ export default function Cart(props) {
 
   const handleGoToMyOrders = (e) => {
     e.preventDefault();
-    navigate("/myorders", { state: { products }, replace: false });
+    navigate("/myorders", {
+      state: { user: props.user, products },
+      replace: false,
+    });
   };
 
   function handleCartItemUpdateMinusButton(cartItem) {
@@ -147,6 +150,11 @@ export default function Cart(props) {
   }
 
   useEffect(() => {
+    if (props.user.type === "Admin") {
+      alert("This page is not for admin, Redirecting to login...");
+      navigate("/", { replace: true });
+    }
+
     if (fetchCartItems) {
       fetch(baseUrl + "/Products/viewCartItems", {
         method: "POST",

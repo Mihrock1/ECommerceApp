@@ -31,18 +31,18 @@ function Login() {
         setJwtToken(data.token);
         setUser(data.user);
         userType = data.user.type;
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
+
         setIsAuthenticated(true);
 
         if (userType === "User") {
-          navigate("/dashboard", { replace: true });
+          navigate("/dashboard", { replace: false });
         } else if (userType === "Admin") {
-          navigate("/admindashboard", { replace: true });
+          navigate("/admindashboard", { replace: false });
         }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Your account status is 'Pending' with Admin");
       });
   }
 
