@@ -6,7 +6,7 @@ import {
   MDBCardImage,
   MDBCardTitle,
 } from "mdb-react-ui-kit";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 import { useNavigate } from "react-router-dom";
 
 function Product(props) {

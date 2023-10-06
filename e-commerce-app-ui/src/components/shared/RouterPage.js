@@ -1,14 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Login";
 import Registration from "./Registration";
-import Orders from "./users/Orders";
-import Dashboard from "./users/Dashboard";
-import Cart from "./users/Cart";
-import AdminDashboard from "./admin/AdminDashboard";
-import ManageProducts from "./admin/ManageProducts";
+import Orders from "./Orders";
+import Dashboard from "../users/Dashboard";
+import Cart from "../users/Cart";
+import AdminDashboard from "../admin/AdminDashboard";
+import ManageProducts from "../admin/ManageProducts";
 import { PublicRoute } from "./PublicRoute";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { useAuth } from "../hooks/useAuth";
+import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
+import { ProtectedRouteUser } from "./ProtectedRouteUser";
+import { ProtectedRouteShared } from "./ProtectedRouteShared";
+import { useAuth } from "../../hooks/useAuth";
 import React from "react";
 
 function RouterPage() {
@@ -36,41 +38,41 @@ function RouterPage() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteUser>
               <Dashboard user={user} jwtToken={jwtToken} />
-            </ProtectedRoute>
+            </ProtectedRouteUser>
           }
         />
         <Route
           path="/cart"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteUser>
               <Cart user={user} jwtToken={jwtToken} />
-            </ProtectedRoute>
+            </ProtectedRouteUser>
           }
         />
         <Route
           path="/myorders"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteShared>
               <Orders user={user} jwtToken={jwtToken} />
-            </ProtectedRoute>
+            </ProtectedRouteShared>
           }
         />
         <Route
           path="/admindashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteAdmin>
               <AdminDashboard user={user} jwtToken={jwtToken} />
-            </ProtectedRoute>
+            </ProtectedRouteAdmin>
           }
         />
         <Route
           path="/manageproducts"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteAdmin>
               <ManageProducts user={user} jwtToken={jwtToken} />
-            </ProtectedRoute>
+            </ProtectedRouteAdmin>
           }
         />
       </Routes>

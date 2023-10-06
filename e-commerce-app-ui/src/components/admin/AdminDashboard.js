@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MDBContainer } from "mdb-react-ui-kit";
 import { MDBRow } from "mdb-react-ui-kit";
 import CustomerList from "./CustomerList";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard(props) {
@@ -11,11 +11,6 @@ export default function AdminDashboard(props) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    if (props.user.type === "User") {
-      alert("This page is not for users, Redirecting to login...");
-      navigate("/", { replace: true });
-    }
-
     fetch(baseUrl + "/Products/viewProducts", {
       method: "POST",
       headers: {

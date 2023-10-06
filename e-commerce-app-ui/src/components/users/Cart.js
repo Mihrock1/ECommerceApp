@@ -13,7 +13,7 @@ import {
 } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 
 export default function Cart(props) {
   const location = useLocation();
@@ -150,11 +150,6 @@ export default function Cart(props) {
   }
 
   useEffect(() => {
-    if (props.user.type === "Admin") {
-      alert("This page is not for admin, Redirecting to login...");
-      navigate("/", { replace: true });
-    }
-
     if (fetchCartItems) {
       fetch(baseUrl + "/Products/viewCartItems", {
         method: "POST",

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { baseUrl } from "./Constants";
 
 function Login() {

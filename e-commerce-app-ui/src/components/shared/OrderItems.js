@@ -1,6 +1,6 @@
 import { MDBCardImage, MDBCol, MDBRow, MDBBtn } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 import { useNavigate } from "react-router-dom";
 
 export default function OrderItems(props) {

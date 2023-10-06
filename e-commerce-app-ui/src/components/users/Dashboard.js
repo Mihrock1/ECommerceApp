@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MDBBtn, MDBContainer } from "mdb-react-ui-kit";
-import { baseUrl } from "../Constants";
-import Product from "./Product";
+import { baseUrl } from "../shared/Constants";
+import Product from "../shared/Product";
 import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 export default function Dashboard(props) {
@@ -15,11 +15,6 @@ export default function Dashboard(props) {
   };
 
   useEffect(() => {
-    if (props.user.type === "Admin") {
-      alert("This page is not for admin, Redirecting to login...");
-      navigate("/", { replace: true });
-    }
-
     fetch(baseUrl + "/Products/viewProducts", {
       method: "POST",
       headers: {

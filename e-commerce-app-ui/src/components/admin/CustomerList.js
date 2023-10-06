@@ -8,7 +8,7 @@ import {
 } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 
 export default function CustomerList(props) {
   const navigate = useNavigate();

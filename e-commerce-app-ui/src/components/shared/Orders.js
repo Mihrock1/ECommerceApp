@@ -9,7 +9,7 @@ import {
 } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { baseUrl } from "../Constants";
+import { baseUrl } from "../shared/Constants";
 import OrderItems from "./OrderItems";
 
 export default function Orders(props) {
