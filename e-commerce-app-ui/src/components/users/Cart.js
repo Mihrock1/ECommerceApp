@@ -11,7 +11,7 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../Constants";
 
@@ -19,19 +19,10 @@ export default function Cart(props) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [user] = useState(props.user);
+  const [user, setUser] = useState(props.user);
   const [products] = useState(location.state.products);
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
-
-  // useMemo(() => {
-  //   if (location.state === null) {
-  //     // alert("You are not logged in, Redirecting to login page...");
-  //     navigate("/", { replace: true });
-  //   } else {
-  //     setProducts(location.state.products);
-  //   }
-  // }, []);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -40,7 +31,7 @@ export default function Cart(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ id: user.id }),
       })
@@ -55,7 +46,7 @@ export default function Cart(props) {
         })
         .catch((err) => {
           console.log(err);
-          console.log("Redirecting to login page...");
+          alert(err + ", Redirecting to login...");
           navigate("/", { replace: true });
         })
         .finally(() => {
@@ -114,7 +105,7 @@ export default function Cart(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+        Authorization: "Bearer " + props.jwtToken,
       },
       body: JSON.stringify(newCartItem),
     })
@@ -127,7 +118,7 @@ export default function Cart(props) {
       })
       .catch((err) => {
         console.log(err);
-        console.log("Redirecting to login page...");
+        alert(err + ", Redirecting to login...");
         navigate("/", { replace: true });
       });
   }
@@ -137,7 +128,7 @@ export default function Cart(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+        Authorization: "Bearer " + props.jwtToken,
       },
       body: JSON.stringify({ id: cartItemId }),
     })
@@ -150,7 +141,7 @@ export default function Cart(props) {
       })
       .catch((err) => {
         console.log(err);
-        console.log("Redirecting to login page...");
+        alert(err + ", Redirecting to login...");
         navigate("/", { replace: true });
       });
   }
@@ -161,7 +152,7 @@ export default function Cart(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ id: user.id }),
       })
@@ -176,15 +167,15 @@ export default function Cart(props) {
         })
         .catch((err) => {
           console.log(err);
-          console.log("Redirecting to login page...");
+          alert(err + ", Redirecting to login...");
           navigate("/", { replace: true });
         })
-        .finally(() => {
+        .finally(async () => {
           fetch(baseUrl + "/Users/viewUser", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+              Authorization: "Bearer " + props.jwtToken,
             },
             body: JSON.stringify({ id: user.id }),
           })
@@ -192,12 +183,12 @@ export default function Cart(props) {
             .then((data) => {
               console.log(data);
               if (data.statusCode === 200) {
-                // setUser(data.user);
+                setUser(data.user);
               }
             })
             .catch((err) => {
               console.log(err);
-              console.log("Redirecting to login page...");
+              alert(err + ", Redirecting to login...");
               navigate("/", { replace: true });
             })
             .finally(() => {
@@ -205,7 +196,7 @@ export default function Cart(props) {
             });
         });
     }
-  }, [fetchCartItems, user.id]);
+  }, [fetchCartItems, navigate, props, setUser, user]);
 
   const noOfItems = () => {
     let noOfItems = 0;
@@ -227,7 +218,7 @@ export default function Cart(props) {
     return product;
   };
 
-  useEffect(() => {}, [cartItems, user]);
+  useEffect(() => {}, [cartItems, props]);
 
   return (
     <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>

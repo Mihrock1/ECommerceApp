@@ -1,8 +1,11 @@
 import { MDBCardImage, MDBCol, MDBRow, MDBBtn } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 import { baseUrl } from "../Constants";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderItems(props) {
+  const navigate = useNavigate();
+
   const [orderItems, setOrderItems] = useState([]);
   const [fetchOrderItems, setFetchOrderItems] = useState(true);
 
@@ -32,6 +35,8 @@ export default function OrderItems(props) {
       })
       .catch((err) => {
         console.log(err);
+        alert(err + ", Redirecting to login...");
+        navigate("/", { replace: true });
       });
   }
 
@@ -56,12 +61,14 @@ export default function OrderItems(props) {
         })
         .catch((err) => {
           console.log(err);
+          alert(err + ", Redirecting to login...");
+          navigate("/", { replace: true });
         })
         .finally(() => {
           setFetchOrderItems(false);
         });
     }
-  }, [fetchOrderItems, props.order]);
+  }, [fetchOrderItems, navigate, props]);
 
   useEffect(() => {}, [orderItems]);
 

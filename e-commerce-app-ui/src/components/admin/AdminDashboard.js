@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { MDBContainer } from "mdb-react-ui-kit";
 import { MDBRow } from "mdb-react-ui-kit";
 import CustomerList from "./CustomerList";
 import { baseUrl } from "../Constants";
+import { useNavigate } from "react-router-dom";
 
-export default function AdminDashboard() {
-  const location = useLocation();
-  const [user] = useState(location.state);
+export default function AdminDashboard(props) {
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -15,9 +15,9 @@ export default function AdminDashboard() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+        Authorization: "Bearer " + props.jwtToken,
       },
-      body: JSON.stringify({ id: user.id }),
+      body: JSON.stringify({ id: props.user.id }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -30,13 +30,15 @@ export default function AdminDashboard() {
       })
       .catch((err) => {
         console.log(err);
+        alert(err + ", Redirecting to login...");
+        navigate("/", { replace: true });
       });
-  }, [user.id]);
+  }, [navigate, props]);
 
   return (
     <MDBContainer className="p-1 overflow-hidden">
       <MDBRow>
-        <CustomerList user={user} products={products} />
+        <CustomerList user={props.user} products={products} />
       </MDBRow>
     </MDBContainer>
   );

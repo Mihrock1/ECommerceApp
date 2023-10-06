@@ -7,7 +7,6 @@ import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 export default function Dashboard(props) {
   const navigate = useNavigate();
-  const [user] = useState(props.user);
   const [products, setProducts] = useState([]);
 
   const handleGoToCart = (e) => {
@@ -22,7 +21,7 @@ export default function Dashboard(props) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + props.jwtToken,
       },
-      body: JSON.stringify({ id: user.id }),
+      body: JSON.stringify({ id: props.user.id }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -35,11 +34,10 @@ export default function Dashboard(props) {
       })
       .catch((err) => {
         console.log(err);
-        console.log("Redirecting to login page...");
+        alert(err + ", Redirecting to login...");
         navigate("/", { replace: true });
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, user.id]);
+  }, [navigate, props]);
 
   return (
     <MDBContainer className="p-4 overflow-hidden">
@@ -48,7 +46,7 @@ export default function Dashboard(props) {
           <MDBCol md="4" key={product.id}>
             <Product
               product={product}
-              userId={user.id}
+              userId={props.user.id}
               jwtToken={props.jwtToken}
             />
           </MDBCol>

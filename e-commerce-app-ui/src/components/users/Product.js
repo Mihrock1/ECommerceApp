@@ -7,8 +7,11 @@ import {
   MDBCardTitle,
 } from "mdb-react-ui-kit";
 import { baseUrl } from "../Constants";
+import { useNavigate } from "react-router-dom";
 
 function Product(props) {
+  const navigate = useNavigate();
+
   const [quantity, setQuantity] = useState(0);
 
   const handleAddToCart = (e) => {
@@ -35,6 +38,8 @@ function Product(props) {
         })
         .catch((err) => {
           console.log(err);
+          alert(err + ", Redirecting to login...");
+          navigate("/", { replace: true });
         });
     }
   };

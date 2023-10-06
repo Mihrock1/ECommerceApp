@@ -7,7 +7,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../Constants";
 import OrderItems from "./OrderItems";
@@ -15,19 +15,9 @@ import OrderItems from "./OrderItems";
 export default function Orders(props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user] = useState(props.user);
-  const [products, setProducts] = useState(location.state.products);
+  const [products] = useState(location.state.products);
   const [orders, setOrders] = useState([]);
   const [fetchOrders, setFetchOrders] = useState(true);
-
-  // useLayoutEffect(() => {
-  //   if (location.state === null) {
-  //     // alert("You are not logged in, Redirecting to login page...");
-  //     navigate("/", { replace: true });
-  //   } else {
-  //     setProducts(location.state.products);
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (fetchOrders) {
@@ -37,7 +27,7 @@ export default function Orders(props) {
           "Content-Type": "application/json",
           Authorization: "Bearer " + props.jwtToken,
         },
-        body: JSON.stringify({ id: user.id }),
+        body: JSON.stringify({ id: props.user.id }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -50,14 +40,14 @@ export default function Orders(props) {
         })
         .catch((err) => {
           console.log(err);
-          console.log("Redirecting to login page...");
+          alert(err + ", Redirecting to login...");
           navigate("/", { replace: true });
         })
         .finally(() => {
           setFetchOrders(false);
         });
     }
-  }, [fetchOrders, user]);
+  }, [fetchOrders, navigate, props]);
 
   useEffect(() => {}, [orders]);
 
@@ -72,7 +62,7 @@ export default function Orders(props) {
             <MDBCardHeader className="px-4 py-5">
               <MDBTypography tag="h4" className="text-muted mb-4">
                 <span style={{ color: "#a8729a" }}>
-                  {user.firstName}'s Orders
+                  {props.user.firstName}'s Orders
                 </span>
               </MDBTypography>
 

@@ -63,7 +63,7 @@ namespace ECommerceAppApi.Controllers
                     _configuration["Jwt:Issuer"],
                     _configuration["Jwt:Audience"],
                     claims,
-                    expires: DateTime.UtcNow.AddMinutes(20),
+                    expires: DateTime.UtcNow.AddMinutes(60),
                     signingCredentials: signIn);
 
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), user });

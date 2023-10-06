@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { baseUrl } from "./Constants";
@@ -8,7 +8,6 @@ function Registration() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRedirect, setIsRedirect] = useState(false);
 
   const navigate = useNavigate();
 
@@ -31,21 +30,19 @@ function Registration() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        alert(data.message);
         if (data.statusCode === 200) {
-          setIsRedirect(true);
+          alert(data.message + ", redirecting to login...");
+          navigate("/", { replace: true });
+        } else {
+          alert(data.message);
         }
       })
       .catch((err) => {
         console.log(err);
+        alert(err + ", Redirecting to login...");
+        navigate("/", { replace: true });
       });
   };
-
-  useEffect(() => {
-    if (isRedirect) {
-      navigate("/", { replace: true });
-    }
-  }, [isRedirect, navigate]);
 
   return (
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">

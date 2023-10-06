@@ -1,12 +1,16 @@
+import { useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 
 export const PublicRoute = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
 
-  if (isAuthenticated) {
-    // user is authenticated
-    logout();
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      logout();
+    }
+
+    return () => {};
+  }, [children, isAuthenticated, logout]);
 
   return children;
 };

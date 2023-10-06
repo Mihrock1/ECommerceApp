@@ -66,7 +66,7 @@ export default function CustomerList(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+        Authorization: "Bearer " + props.jwtToken,
       },
       body: JSON.stringify({ id: userId }),
     })
@@ -82,6 +82,8 @@ export default function CustomerList(props) {
       })
       .catch((err) => {
         console.log(err);
+        alert(err + ", Redirecting to login...");
+        navigate("/", { replace: true });
       });
   }
 
@@ -102,7 +104,7 @@ export default function CustomerList(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ id: userId }),
       })
@@ -117,6 +119,8 @@ export default function CustomerList(props) {
         })
         .catch((err) => {
           console.log(err);
+          alert(err + ", Redirecting to login...");
+          navigate("/", { replace: true });
         });
     } else {
       return;
@@ -129,7 +133,7 @@ export default function CustomerList(props) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + sessionStorage.getItem("jwtToken"),
+          Authorization: "Bearer " + props.jwtToken,
         },
         body: JSON.stringify({ id: props.user.id }),
       })
@@ -144,12 +148,14 @@ export default function CustomerList(props) {
         })
         .catch((err) => {
           console.log(err);
+          alert(err + ", Redirecting to login...");
+          navigate("/", { replace: true });
         })
         .finally(() => {
           setFetchCustomerList(false);
         });
     }
-  }, [fetchCustomerList, props.user.id]);
+  }, [fetchCustomerList, navigate, props]);
 
   useEffect(() => {}, [customerList]);
 
