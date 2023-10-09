@@ -5,13 +5,16 @@ import Orders from "./Orders";
 import Dashboard from "../users/Dashboard";
 import Cart from "../users/Cart";
 import AdminDashboard from "../admin/AdminDashboard";
-import ManageProducts from "../admin/ManageProducts";
+import AddProduct from "../admin/AddProduct";
 import { PublicRoute } from "./PublicRoute";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteUser } from "./ProtectedRouteUser";
 import { ProtectedRouteShared } from "./ProtectedRouteShared";
 import { useAuth } from "../../hooks/useAuth";
 import React from "react";
+import UpdateProduct from "../admin/UpdateProduct";
+import UpdateUser from "../users/UpdateUser";
+import AddFunds from "../users/AddFunds";
 
 function RouterPage() {
   const { user, jwtToken } = useAuth();
@@ -44,10 +47,26 @@ function RouterPage() {
           }
         />
         <Route
+          path="/updateuser"
+          element={
+            <ProtectedRouteUser>
+              <UpdateUser jwtToken={jwtToken} />
+            </ProtectedRouteUser>
+          }
+        />
+        <Route
+          path="/addfunds"
+          element={
+            <ProtectedRouteUser>
+              <AddFunds jwtToken={jwtToken} />
+            </ProtectedRouteUser>
+          }
+        />
+        <Route
           path="/cart"
           element={
             <ProtectedRouteUser>
-              <Cart user={user} jwtToken={jwtToken} />
+              <Cart jwtToken={jwtToken} />
             </ProtectedRouteUser>
           }
         />
@@ -55,7 +74,7 @@ function RouterPage() {
           path="/myorders"
           element={
             <ProtectedRouteShared>
-              <Orders user={user} jwtToken={jwtToken} />
+              <Orders jwtToken={jwtToken} />
             </ProtectedRouteShared>
           }
         />
@@ -68,10 +87,18 @@ function RouterPage() {
           }
         />
         <Route
-          path="/manageproducts"
+          path="/addproduct"
           element={
             <ProtectedRouteAdmin>
-              <ManageProducts user={user} jwtToken={jwtToken} />
+              <AddProduct user={user} jwtToken={jwtToken} />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/updateproduct"
+          element={
+            <ProtectedRouteAdmin>
+              <UpdateProduct user={user} jwtToken={jwtToken} />
             </ProtectedRouteAdmin>
           }
         />

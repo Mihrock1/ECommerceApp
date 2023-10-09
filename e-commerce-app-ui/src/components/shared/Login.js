@@ -42,7 +42,9 @@ function Login() {
       })
       .catch((err) => {
         console.log(err);
-        alert("Your account status is 'Pending' with Admin");
+        alert(
+          "Either Invalid Credentials or User Status is 'Pending' with Admin"
+        );
       });
   }
 

@@ -1,10 +1,5 @@
-﻿using ECommerceAppApi.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace ECommerceAppApi.Models
 {
@@ -179,6 +174,33 @@ namespace ECommerceAppApi.Models
             {
                 response.StatusCode = 400;
                 response.Message = "User could not be updated";
+            }
+
+            return response;
+        }
+
+        public Response AddFunds(Users users, SqlConnection connection)
+        {
+            SqlCommand cmd = new SqlCommand("sp_addFunds", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Id", users.Id);
+            cmd.Parameters.AddWithValue("@Amount", users.Fund);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            Response response = new Response();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Funds added successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Funds could not be added";
             }
 
             return response;
@@ -511,17 +533,18 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response AddProducts(Products products, SqlConnection connection)
+        public Response AddProduct(UsersProductsArray usersProductsArray, SqlConnection connection)
         {
             Response response = new Response();
             SqlCommand cmd = new SqlCommand("sp_addProducts", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@Name", products.Name);
-            cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
-            cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
-            cmd.Parameters.AddWithValue("@Discount", products.Discount);
-            cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
+            cmd.Parameters.AddWithValue("@AdminId", usersProductsArray.Admin.Id);
+            cmd.Parameters.AddWithValue("@Name", usersProductsArray.Product.Name);
+            cmd.Parameters.AddWithValue("@Manufacturer", usersProductsArray.Product.Manufacturer);
+            cmd.Parameters.AddWithValue("@UnitPrice", usersProductsArray.Product.UnitPrice);
+            cmd.Parameters.AddWithValue("@Discount", usersProductsArray.Product.Discount);
+            cmd.Parameters.AddWithValue("@ImageUrl", usersProductsArray.Product.ImageUrl);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -541,18 +564,19 @@ namespace ECommerceAppApi.Models
             return response;
         }
 
-        public Response UpdateProducts(Products products, SqlConnection connection)
+        public Response UpdateProduct(UsersProductsArray usersProductsArray, SqlConnection connection)
         {
             Response response = new Response();
             SqlCommand cmd = new SqlCommand("sp_updateProducts", connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@Id", products.Id);
-            cmd.Parameters.AddWithValue("@Name", products.Name);
-            cmd.Parameters.AddWithValue("@Manufacturer", products.Manufacturer);
-            cmd.Parameters.AddWithValue("@UnitPrice", products.UnitPrice);
-            cmd.Parameters.AddWithValue("@Discount", products.Discount);
-            cmd.Parameters.AddWithValue("@ImageUrl", products.ImageUrl);
+            cmd.Parameters.AddWithValue("@AdminId", usersProductsArray.Admin.Id);
+            cmd.Parameters.AddWithValue("@ProductId", usersProductsArray.Product.Id);
+            cmd.Parameters.AddWithValue("@Name", usersProductsArray.Product.Name);
+            cmd.Parameters.AddWithValue("@Manufacturer", usersProductsArray.Product.Manufacturer);
+            cmd.Parameters.AddWithValue("@UnitPrice", usersProductsArray.Product.UnitPrice);
+            cmd.Parameters.AddWithValue("@Discount", usersProductsArray.Product.Discount);
+            cmd.Parameters.AddWithValue("@ImageUrl", usersProductsArray.Product.ImageUrl);
 
             connection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -567,6 +591,33 @@ namespace ECommerceAppApi.Models
             {
                 response.StatusCode = 400;
                 response.Message = "Product could not be updated";
+            }
+
+            return response;
+        }
+
+        public Response DeleteProduct(UsersProductsArray usersProductsArray, SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("sp_deleteProducts", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@AdminId", usersProductsArray.Admin.Id);
+            cmd.Parameters.AddWithValue("@ProductId", usersProductsArray.Product.Id);
+
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.Message = "Product deleted successfully";
+            }
+            else
+            {
+                response.StatusCode = 400;
+                response.Message = "Product could not be deleted";
             }
 
             return response;

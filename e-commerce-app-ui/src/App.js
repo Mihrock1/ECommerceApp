@@ -6,12 +6,12 @@ import RouterPage from "./components/shared/RouterPage";
 
 function App() {
   return (
-    <AuthProvider>
-      <div className="App">
-        <Navbar />
+    <div className="App">
+      <Navbar />
+      <AuthProvider>
         <RouterPage />
-      </div>
-    </AuthProvider>
+      </AuthProvider>
+    </div>
   );
 }
 

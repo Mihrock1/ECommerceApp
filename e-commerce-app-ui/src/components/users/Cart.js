@@ -11,18 +11,28 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared/Constants";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Cart(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  const [user, setUser] = useState(props.user);
-  const [products] = useState(location.state.products);
+  useMemo(() => {
+    if (location.state === null) {
+      alert("You can't access this page directly, Logging Out...");
+      logout();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [cartItems, setCartItems] = useState([]);
   const [fetchCartItems, setFetchCartItems] = useState(true);
+  const [user, setUser] = useState(location.state.user);
+  const [products] = useState(location.state.products);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -62,7 +72,7 @@ export default function Cart(props) {
   const handleGoToMyOrders = (e) => {
     e.preventDefault();
     navigate("/myorders", {
-      state: { user: props.user, products },
+      state: { user: user, products: products },
       replace: false,
     });
   };

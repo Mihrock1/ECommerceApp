@@ -63,7 +63,7 @@ namespace ECommerceAppApi.Controllers
                     _configuration["Jwt:Issuer"],
                     _configuration["Jwt:Audience"],
                     claims,
-                    expires: DateTime.UtcNow.AddMinutes(60),
+                    expires: DateTime.UtcNow.AddMinutes(30),
                     signingCredentials: signIn);
 
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), user });
@@ -100,6 +100,21 @@ namespace ECommerceAppApi.Controllers
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
             Response response = dal.UpdateUser(users, connection);
+
+            return response;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("addFunds")]
+        public Response AddFunds(Users users)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.AddFunds(users, connection);
 
             return response;
         }

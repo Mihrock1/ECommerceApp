@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", null);
   const [user, setUser] = useLocalStorage("user", null);
 
-  // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
     setJwtToken(null);

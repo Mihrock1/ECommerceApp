@@ -7,18 +7,29 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared/Constants";
 import OrderItems from "./OrderItems";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Orders(props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user] = useState(location.state.user);
-  const [products] = useState(location.state.products);
+  const { logout } = useAuth();
+
+  useMemo(() => {
+    if (location.state === null) {
+      alert("You can't access this page directly, Logging Out...");
+      logout();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [orders, setOrders] = useState([]);
   const [fetchOrders, setFetchOrders] = useState(true);
+  const [user] = useState(location.state.user);
+  const [products] = useState(location.state.products);
 
   useEffect(() => {
     if (fetchOrders) {

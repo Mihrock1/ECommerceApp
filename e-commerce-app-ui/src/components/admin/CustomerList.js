@@ -173,7 +173,7 @@ export default function CustomerList(props) {
   useEffect(() => {}, [customerList]);
 
   return (
-    <MDBContainer className="py-3 h-100">
+    <MDBContainer className="py-4 h-100">
       <MDBTypography tag="h4" className="text-muted mb-2">
         List of all registered Customers
       </MDBTypography>

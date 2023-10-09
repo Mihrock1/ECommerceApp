@@ -18,30 +18,45 @@ namespace ECommerceAppApi.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("addProducts")]
-        public Response AddProducts(Products products)
+        [Route("addProduct")]
+        public Response AddProduct(UsersProductsArray usersProductsArray)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.AddProducts(products, connection);
+            Response response = dal.AddProduct(usersProductsArray, connection);
 
             return response;
         }
 
         [Authorize]
         [HttpPost]
-        [Route("updateProducts")]
-        public Response UpdateProducts(Products products)
+        [Route("updateProduct")]
+        public Response UpdateProduct(UsersProductsArray usersProductsArray)
         {
             DAL dal = new DAL();
 
             SqlConnection connection =
                 new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
 
-            Response response = dal.UpdateProducts(products, connection);
+            Response response = dal.UpdateProduct(usersProductsArray, connection);
+
+            return response;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("deleteProduct")]
+        public Response DeleteProduct(UsersProductsArray usersProductsArray)
+        {
+            DAL dal = new DAL();
+
+            SqlConnection connection =
+                new SqlConnection(_configuration.GetConnectionString("ECommerceAppCS").ToString());
+
+            Response response = dal.DeleteProduct(usersProductsArray, connection);
 
             return response;
         }
