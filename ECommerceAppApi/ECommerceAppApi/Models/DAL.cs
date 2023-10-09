@@ -22,13 +22,13 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "User registered successfully, but pending activation";
             }
             else
             {
                 response.StatusCode = 400;
-                response.Message = "User registration failed as User already exists, please login";
+                response.Message = "User registration failed, user might already exist, try logging in.";
             }
 
             return response;
@@ -134,14 +134,14 @@ namespace ECommerceAppApi.Models
                 }
                 else
                 {
-                    response.StatusCode = 401;
+                    response.StatusCode = 403;
                     response.Message = "Users could not be fetched";
                     response.ListUsers = null;
                 }
             }
             else
             {
-                response.StatusCode = 401;
+                response.StatusCode = 403;
                 response.Message = "Users could not be fetched";
                 response.ListUsers = null;
             }
@@ -167,7 +167,7 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "User updated successfully";
             }
             else
@@ -194,7 +194,7 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Funds added successfully";
             }
             else
@@ -221,7 +221,7 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "User activated successfully";
             }
             else
@@ -253,7 +253,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 400;
+                response.StatusCode = 403;
                 response.Message = "User could not be deleted";
             }
 
@@ -276,12 +276,12 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Items added to cart successfully";
             }
             else
             {
-                response.StatusCode = 400;
+                response.StatusCode = 403;
                 response.Message = "Items could not be added to cart";
             }
 
@@ -304,7 +304,7 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Items in the cart updated successfully";
             }
             else
@@ -404,7 +404,7 @@ namespace ECommerceAppApi.Models
             Response response = new Response();
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Order placed successfully";
             }
             else
@@ -552,12 +552,12 @@ namespace ECommerceAppApi.Models
 
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Product added successfully";
             }
             else
             {
-                response.StatusCode = 400;
+                response.StatusCode = 403;
                 response.Message = "Product could not be added";
             }
 
@@ -584,12 +584,12 @@ namespace ECommerceAppApi.Models
 
             if (i > 0)
             {
-                response.StatusCode = 200;
+                response.StatusCode = 201;
                 response.Message = "Product updated successfully";
             }
             else
             {
-                response.StatusCode = 400;
+                response.StatusCode = 403;
                 response.Message = "Product could not be updated";
             }
 
@@ -616,7 +616,7 @@ namespace ECommerceAppApi.Models
             }
             else
             {
-                response.StatusCode = 400;
+                response.StatusCode = 403;
                 response.Message = "Product could not be deleted";
             }
 

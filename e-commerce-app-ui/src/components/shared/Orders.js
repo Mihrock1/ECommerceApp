@@ -44,7 +44,7 @@ export default function Orders(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setOrders(data.listOrders);
           } else {
             setOrders([]);

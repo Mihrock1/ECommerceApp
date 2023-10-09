@@ -78,7 +78,7 @@ export default function CustomerList(props) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.statusCode === 200) {
+        if (String(data.statusCode).charAt(0) === "2") {
           alert(data.message);
           setFetchCustomerList(true);
         } else {
@@ -122,7 +122,7 @@ export default function CustomerList(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setFetchCustomerList(true);
           } else {
             alert(data.message);
@@ -151,7 +151,7 @@ export default function CustomerList(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setCustomerList(
               data.listUsers.filter((user) => user.type === "User")
             );

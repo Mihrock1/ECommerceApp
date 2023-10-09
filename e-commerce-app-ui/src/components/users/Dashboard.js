@@ -95,7 +95,7 @@ export default function Dashboard(props) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.statusCode === 200) {
+        if (String(data.statusCode).charAt(0) === "2") {
           setUser(data.user);
         } else {
           alert(data.message);
@@ -118,7 +118,7 @@ export default function Dashboard(props) {
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
-            if (data.statusCode === 200) {
+            if (String(data.statusCode).charAt(0) === "2") {
               setProducts(data.listProducts);
             } else {
               alert(data.message);
@@ -187,7 +187,6 @@ export default function Dashboard(props) {
             <MDBBtn
               rounded
               className="mx-2"
-              color="dark"
               size="lg"
               onClick={handleUpdateUserDetails}
             >
@@ -198,7 +197,7 @@ export default function Dashboard(props) {
             <MDBBtn
               rounded
               className="mx-2"
-              color="dark"
+              color="success"
               size="lg"
               onClick={handleAddFunds}
             >
@@ -209,7 +208,7 @@ export default function Dashboard(props) {
             <MDBBtn
               rounded
               className="mx-2"
-              color="dark"
+              color="danger"
               size="lg"
               onClick={() => logout()}
             >

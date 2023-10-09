@@ -35,6 +35,7 @@ function Product(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
+          alert(data.message);
         })
         .catch((err) => {
           console.log(err);

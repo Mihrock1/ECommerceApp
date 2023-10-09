@@ -54,7 +54,7 @@ export default function ProductList(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setFetchProducts(true);
           } else {
             alert(data.message);
@@ -83,7 +83,7 @@ export default function ProductList(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setProducts(data.listProducts);
           } else {
             alert(data.message);

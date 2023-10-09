@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setJwtToken(null);
     setIsAuthenticated(false);
+    alert("You have been logged out.");
   };
 
   const value = useMemo(

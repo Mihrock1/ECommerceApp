@@ -48,7 +48,7 @@ export default function Cart(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             alert(data.message);
           } else {
             alert(data.message);
@@ -125,7 +125,7 @@ export default function Cart(props) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.statusCode === 200) {
+        if (String(data.statusCode).charAt(0) === "2") {
           setFetchCartItems(true);
         }
       })
@@ -148,7 +148,7 @@ export default function Cart(props) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.statusCode === 200) {
+        if (String(data.statusCode).charAt(0) === "2") {
           setFetchCartItems(true);
         }
       })
@@ -172,7 +172,7 @@ export default function Cart(props) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          if (data.statusCode === 200) {
+          if (String(data.statusCode).charAt(0) === "2") {
             setCartItems(data.listCartItems);
           } else {
             setCartItems([]);

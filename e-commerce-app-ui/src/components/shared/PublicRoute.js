@@ -9,7 +9,6 @@ export const PublicRoute = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated) {
       logout();
-      alert("You have been logged out.");
     }
   }, [isAuthenticated, logout, navigate]);
 

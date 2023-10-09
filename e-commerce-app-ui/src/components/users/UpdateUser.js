@@ -34,7 +34,7 @@ function UpdateUser(props) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.statusCode === 200) {
+        if (String(data.statusCode).charAt(0) === "2") {
           alert(data.message + ", redirecting to user dashboard...");
           navigate("/dashboard", { replace: true });
         } else {
