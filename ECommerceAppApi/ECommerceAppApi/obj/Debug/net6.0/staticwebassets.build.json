@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "5oTBMqk9qfRzsRax5PWn004n/WFnDCuj1nUCFedrfCg=",
+  "Hash": "3HOpb1M+CkA1v8KJFMWQqxCNIcANxFz5PAXrt1JqLbM=",
   "Source": "ECommerceAppApi",
   "BasePath": "_content/ECommerceAppApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ECommerceAppApi\\wwwroot",
+      "Source": "ECommerceAppApi",
+      "ContentRoot": "C:\\Users\\mihir\\OneDrive\\Documents\\Workspace\\ECommerceApp\\ECommerceAppApi\\ECommerceAppApi\\wwwroot\\",
+      "BasePath": "_content/ECommerceAppApi",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }
