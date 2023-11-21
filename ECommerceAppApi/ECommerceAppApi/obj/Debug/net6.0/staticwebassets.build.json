@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3HOpb1M+CkA1v8KJFMWQqxCNIcANxFz5PAXrt1JqLbM=",
+  "Hash": "c4V8sI/re9ld0ECY1m+CswUv5KZgdpuRtweKvi0p148=",
   "Source": "ECommerceAppApi",
   "BasePath": "_content/ECommerceAppApi",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "ECommerceAppApi\\wwwroot",
       "Source": "ECommerceAppApi",
-      "ContentRoot": "C:\\Users\\mihir\\OneDrive\\Documents\\Workspace\\ECommerceApp\\ECommerceAppApi\\ECommerceAppApi\\wwwroot\\",
+      "ContentRoot": "D:\\Workspace\\ECommerceApp\\ECommerceAppApi\\ECommerceAppApi\\wwwroot\\",
       "BasePath": "_content/ECommerceAppApi",
       "Pattern": "**"
     }
